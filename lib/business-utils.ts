@@ -129,7 +129,134 @@ const dummyCompanies: Record<string, CompanyData> = {
       overdueCount: 0
     },
     lastUpdated: '2024-03-16'
+  },
+  '9123123456': {
+    businessNumber: '912-31-23456',
+    companyName: '주식회사 에코123',
+    address: '부산시 해운대구 마린시티 77',
+    businessType: '제조업',
+    taxpayerStatus: '계속사업자',
+    taxType: '간이과세자',
+    overdueInfo: {
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0
+    },
+    lastUpdated: '2024-04-22'
+  },
+  '4561237890': {
+    businessNumber: '456-12-37890',
+    companyName: '주식회사 하모니123',
+    address: '대구시 수성구 동대구로 123',
+    businessType: '서비스업',
+    taxpayerStatus: '휴업자',
+    taxType: '일반과세자',
+    overdueInfo: {
+      hasOverdue: true,
+      totalAmount: 500000,
+      overdueCount: 1
+    },
+    lastUpdated: '2024-06-01'
+  },
+  '7891234560': {
+    businessNumber: '789-12-34560',
+    companyName: '주식회사 트렌디123',
+    address: '서울시 강서구 공항대로 321',
+    businessType: '정보통신업',
+    taxpayerStatus: '계속사업자',
+    taxType: '일반과세자',
+    overdueInfo: {
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0
+    },
+    lastUpdated: '2024-05-01'
+  },
+  '3214561230': {
+    businessNumber: '321-45-61230',
+    companyName: '주식회사 클라우드123',
+    address: '경기도 성남시 판교로 235',
+    businessType: '소프트웨어 개발',
+    taxpayerStatus: '폐업자',
+    taxType: '간이과세자',
+    overdueInfo: {
+      hasOverdue: true,
+      totalAmount: 980000,
+      overdueCount: 3
+    },
+    lastUpdated: '2024-01-15'
+  },
+  '6541239870': {
+    businessNumber: '654-12-39870',
+    companyName: '주식회사 패스트123',
+    address: '인천시 남동구 논현동 456',
+    businessType: '물류업',
+    taxpayerStatus: '계속사업자',
+    taxType: '일반과세자',
+    overdueInfo: {
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0
+    },
+    lastUpdated: '2024-03-05'
+  },
+  '1472581230': {
+    businessNumber: '147-25-81230',
+    companyName: '주식회사 엘리트123',
+    address: '서울시 마포구 월드컵북로 88',
+    businessType: '교육서비스업',
+    taxpayerStatus: '계속사업자',
+    taxType: '일반과세자',
+    overdueInfo: {
+      hasOverdue: true,
+      totalAmount: 1200000,
+      overdueCount: 2
+    },
+    lastUpdated: '2024-02-20'
+  },
+  '8529631234': {
+    businessNumber: '852-96-31234',
+    companyName: '주식회사 미디어123',
+    address: '광주시 서구 상무대로 123',
+    businessType: '영상콘텐츠 제작업',
+    taxpayerStatus: '계속사업자',
+    taxType: '일반과세자',
+    overdueInfo: {
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0
+    },
+    lastUpdated: '2024-04-01'
+  },
+  '9637411235': {
+    businessNumber: '963-74-11235',
+    companyName: '주식회사 디지털123',
+    address: '대전시 유성구 대학로 45',
+    businessType: '전자상거래업',
+    taxpayerStatus: '계속사업자',
+    taxType: '간이과세자',
+    overdueInfo: {
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0
+    },
+    lastUpdated: '2024-06-15'
+  },
+  '1230009999': {
+    businessNumber: '123-00-09999',
+    companyName: '주식회사 제로123',
+    address: '울산시 남구 번영로 123',
+    businessType: '건설업',
+    taxpayerStatus: '휴업자',
+    taxType: '일반과세자',
+    overdueInfo: {
+      hasOverdue: true,
+      totalAmount: 300000,
+      overdueCount: 1
+    },
+    lastUpdated: '2024-02-28'
   }
+
 };
 
 

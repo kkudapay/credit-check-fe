@@ -48,6 +48,7 @@ export default function BizSearchPage() {
     router.push(`/biz/${businessNumber.replace(/-/g, '')}`);
   };
 
+  /*
   //변수 초기화함수
   const handleBack = () => {
     setShowResults(false);
@@ -55,6 +56,7 @@ export default function BizSearchPage() {
     setSearchQuery('');
     setSearchResults([]);
   };
+  */
 
   //입력값이 10자리 숫자일 경우 사업자번호 형식으로 변환하고 변수값을 변환된 값으로 업데이트
   //(사용자가 입력할 때마다 실행됨)
@@ -70,45 +72,67 @@ export default function BizSearchPage() {
     }
   };
 
-
-  //검색버튼을 눌렀을 경우
-  if (showResults || noResults) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b mb-6">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium">
-                꾸다 외상체크
-              </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header */}
+      <div className="bg-white border-b mb-10">
+        <div className="mobile-container py-4 flex justify-between items-center">
+          <div className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium mt-1 mb-1">
+            꾸다 외상체크
           </div>
         </div>
+      </div>
 
-        {/* 검색결과가 없을 경우 */}
-        <div className="mobile-container py-8">
-          {noResults ? (
-            <div className="text-center py-16">
-              <p className="text-gray-600 text-lg">
-                국세청에 등록되지 않은 사업자입니다
-              </p>
+
+      {/* Body */}
+      <div className="mobile-container py-8 flex-1">
+        <div className="max-w-md mx-auto">
+          <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            사업자번호 연체정보 조회
+          </h1>
+
+          <div className="relative mb-6">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="사업자번호 또는 상호명을 입력하세요"
+              value={searchQuery}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              className="pl-12 h-14 text-base border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-0"
+              disabled={isSearching}
+            />
+          </div>
+
+          <Button
+            onClick={handleSearch}
+            disabled={isSearching || !searchQuery.trim()}
+            className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base mb-6"
+          >
+            {isSearching ? (
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <span>검색중...</span>
+              </div>
+            ) : (
+              '검색하기'
+            )}
+          </Button>
+            
+          
+
+          {!isSearching && noResults && (
+            <div className="text-center text-gray-600 py-8">
+              국세청에 등록되지 않은 사업자입니다
             </div>
-          ) : ( //검색결과가 있을 경우
+          )}
+
+          {!isSearching && searchResults.length > 0 && (
             <div className="space-y-3">
               {searchResults.map((company) => (
                 <div
                   key={company.businessNumber}
-                  onClick={() => handleCompanySelect(company.businessNumber)} //원하는 회사 클릭시 세부 페이지 라우팅함수 실행
+                  onClick={() => handleCompanySelect(company.businessNumber)}
                   className="bg-white rounded-lg p-4 border border-gray-200 cursor-pointer hover:border-orange-300 transition-colors"
                 >
                   <div className="space-y-2">
@@ -124,58 +148,8 @@ export default function BizSearchPage() {
           )}
         </div>
       </div>
-    );
-  }
 
-  //기본 검색 페이지
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="mobile-container">
-          <div className="text-center mb-12">
-            <div className="bg-orange-500 text-white px-4 py-2 rounded-lg inline-block mb-8 font-medium">
-              꾸다 외상체크
-            </div>
-            
-            <h1 className="text-2xl font-bold text-gray-900 mb-8">
-              사업자번호 연체정보 조회
-            </h1>
-
-            <div className="max-w-md mx-auto">
-              <div className="relative mb-6">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  type="text"
-                  placeholder="사업자번호 또는 상호명을 입력하세요"
-                  value={searchQuery}
-                  onChange={handleInputChange}
-                  onKeyPress={handleKeyPress}
-                  className="pl-12 h-14 text-base border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-0"
-                  disabled={isSearching}
-                />
-              </div>
-
-              <Button
-                onClick={handleSearch}
-                disabled={isSearching || !searchQuery.trim()}
-                className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base"
-              >
-                {isSearching ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>검색중...</span>
-                  </div>
-                ) : (
-                  '검색하기'
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer indicator */}
+      {/* Footer */}
       <div className="pb-8">
         <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
       </div>

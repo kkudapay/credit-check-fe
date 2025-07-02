@@ -9,7 +9,7 @@ import { getCompanyData, type CompanyData } from '@/lib/business-utils';
 import { formatCurrency, calculateDaysAgo } from '@/lib/format-utils';
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
-
+import Timeline from '@/components/ui/timeline';
 //회사 상세 페이지 렌더링 함수
 export default function CompanyDetailPage() {
   const params = useParams();
@@ -286,7 +286,8 @@ export default function CompanyDetailPage() {
               <ChevronLeft className="w-5 h-5" />
             </button>)}
           </div>
-          
+
+          <Timeline />
         </>
         )}
       </div>

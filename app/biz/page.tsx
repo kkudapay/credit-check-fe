@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { formatBusinessNumber, searchCompanies, type CompanySearchResult } from '@/lib/business-utils';
-import HamburgerWithSidebar from '@/components/HamburgerWithSidebar'
+import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');

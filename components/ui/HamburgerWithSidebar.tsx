@@ -36,9 +36,9 @@ export default function HamburgerWithSidebar() {
         </div>
 
         <ul className="p-4 space-y-4 text-gray-800">
-          <li className="hover:text-orange-500 cursor-pointer">홈</li>
-          <li className="hover:text-orange-500 cursor-pointer">마이페이지</li>
-          <li className="hover:text-orange-500 cursor-pointer">설정</li>
+          <li className="hover:text-orange-500 cursor-pointer">로그인</li>
+          <li className="hover:text-orange-500 cursor-pointer">블로그</li>
+          <li className="hover:text-orange-500 cursor-pointer">자주 묻는 질문</li>
           <li className="hover:text-orange-500 cursor-pointer">로그아웃</li>
         </ul>
       </div>

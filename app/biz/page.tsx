@@ -48,6 +48,12 @@ export default function BizSearchPage() {
     router.push(`/biz/${businessNumber.replace(/-/g, '')}`);
   };
 
+  const handleGoHome = () => {
+    console.log('Clicked!');
+    router.push('/biz');
+     
+  };
+
   /*
   //변수 초기화함수
   const handleBack = () => {
@@ -77,7 +83,7 @@ export default function BizSearchPage() {
       {/* Header */}
       <div className="bg-white border-b mb-10">
         <div className="mobile-container py-4 flex justify-between items-center">
-          <div className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium mt-1 mb-1">
+          <div onClick={handleGoHome} className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium mt-1 mb-1 cursor-pointer ">
             꾸다 외상체크
           </div>
         </div>

@@ -60,7 +60,7 @@ export default function CompanyDetailPage() {
                 <ArrowLeft className="h-4 w-4" />
                 <span>뒤로</span>
               </Button>
-              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium cursor-pointer">
+              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
                 꾸다 외상체크
               </div>
             </div>
@@ -94,7 +94,7 @@ export default function CompanyDetailPage() {
                 <ArrowLeft className="h-4 w-4" />
                 <span>뒤로</span>
               </Button>
-              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium cursor-pointer">
+              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
                 꾸다 외상체크
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function CompanyDetailPage() {
               <ArrowLeft className="h-4 w-4" />
               <span>뒤로</span>
             </Button>
-            <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-1 rounded text-sm font-medium cursor-pointer">
+            <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
               꾸다 외상체크
             </div>
           </div>

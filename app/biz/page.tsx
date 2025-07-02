@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { formatBusinessNumber, searchCompanies, type CompanySearchResult } from '@/lib/business-utils';
+import HamburgerWithSidebar from '@/components/HamburgerWithSidebar'
 
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,15 +55,6 @@ export default function BizSearchPage() {
      
   };
 
-  /*
-  //변수 초기화함수
-  const handleBack = () => {
-    setShowResults(false);
-    setNoResults(false);
-    setSearchQuery('');
-    setSearchResults([]);
-  };
-  */
 
   //입력값이 10자리 숫자일 경우 사업자번호 형식으로 변환하고 변수값을 변환된 값으로 업데이트
   //(사용자가 입력할 때마다 실행됨)
@@ -79,6 +71,10 @@ export default function BizSearchPage() {
   };
 
   return (
+
+    <div className="min-h-screen bg-gray-50">
+      <HamburgerWithSidebar />
+    
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <div className="bg-white border-b mb-10">
@@ -160,5 +156,7 @@ export default function BizSearchPage() {
         <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
       </div>
     </div>
+</div>
+    
   );
 }

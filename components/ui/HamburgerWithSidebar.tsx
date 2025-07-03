@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getCurrentSession, logout } from '@/lib/auth-utils';
+import { toast } from 'sonner';
 
 
 export default function HamburgerWithSidebar() {
@@ -27,9 +28,13 @@ export default function HamburgerWithSidebar() {
 
   // 로그아웃 처리
   const handleLogout = async () => {
-  await logout();
-  setIsLoggedIn(false);
-  setIsOpen(false);
+  await logout(); //세션 제거
+  setIsLoggedIn(false); //클라이언트 상태 초기화
+  setIsOpen(false); //햄버거 메뉴 닫기
+  toast.info('정상적으로 로그아웃 되었습니다.', {
+  duration: 2000, 
+});
+  
 };
 
   return (

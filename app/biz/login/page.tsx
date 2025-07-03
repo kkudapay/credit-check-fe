@@ -12,6 +12,8 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { createClient } from '@/lib/supabaseClient'
 import { login } from '@/lib/auth-utils';
 
+import { toast } from 'sonner';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,8 +39,8 @@ export default function LoginPage() {
 
     if (!password.trim()) {
       newErrors.password = '비밀번호를 입력해주세요';
-    } else if (password.length < 3) {
-      newErrors.password = '비밀번호는 3자 이상이어야 합니다';
+    } else if (password.length < 6) {
+      newErrors.password = '비밀번호는 6자 이상이어야 합니다';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -59,7 +61,10 @@ export default function LoginPage() {
       setIsLoading(false)
       return
     }
-    console.log('로그인 성공!!!!:', data.user);
+    
+    toast.success('로그인되었습니다. 어서오세요!', {
+  duration: 2000, 
+});
 
     // 로그인 성공
     router.refresh() // 세션 갱신

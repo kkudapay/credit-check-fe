@@ -34,3 +34,9 @@ export function formatDate(date: string): string {
     day: 'numeric'
   });
 }
+
+// 새 게시글 여부 확인 (4일 이내)
+export const isNewPost = (dateString: string): boolean => {
+  const daysAgo = calculateDaysAgo(dateString);
+  return daysAgo <= 4;
+};

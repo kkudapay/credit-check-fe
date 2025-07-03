@@ -110,6 +110,14 @@ export default function HamburgerWithSidebar() {
                 </Link>
               </>
             )}
+
+            <Link 
+              href="/biz/blog"
+              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              블로그
+            </Link>
           </nav>
         </div>
       </div>

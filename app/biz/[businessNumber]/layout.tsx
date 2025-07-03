@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (!companyData) {
     return {
-      title: '사업자 정보를 찾을 수 없습니다 | 꾸다 외상체크',
+      title: `${businessNumber} 사업자 정보를 찾을 수 없습니다 - 꾸다 외상체크`, 
       description: '입력하신 사업자번호로 등록된 정보를 찾을 수 없습니다.',
     };
   }
@@ -23,11 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   //동적 메타데이터 반환
   return {
-    title: `${companyName} 사업자번호 연체정보 | 실시간 신용조회/개인사업자 신용조회`,
-    description: `${companyName} 사업자번호, 연체, 위험도 등 최신 정보 제공. 거래 시 반드시 확인하세요. 매주 업데이트되는 개인사업자 신용정보 플랫폼.`,
+    title: `${companyName} 사업자번호 연체내역 - 꾸다 외상체크`,
+    description: `${companyName} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
     openGraph: {
-      title: `${companyName} 사업자번호 연체정보 | 실시간 신용조회/개인사업자 신용조회`,
-      description: `${companyName} 사업자번호, 연체, 위험도 등 최신 정보 제공. 거래 시 반드시 확인하세요. 매주 업데이트되는 개인사업자 신용정보 플랫폼.`,
+      title: `${companyName} 사업자번호 연체내역 - 꾸다 외상체크`,
+      description: `${companyName} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
       url: `https://kkudacheck.kr/biz/${businessNumber}`,
     },
     alternates: {

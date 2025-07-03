@@ -46,21 +46,21 @@ export default function HamburgerWithSidebar() {
           {/* Navigation Menu */}
           <nav className="mt-12 space-y-6">
             <Link 
-              href="/"
+              href="/biz"
               className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               onClick={() => setIsOpen(false)}
             >
               홈
             </Link>
             <Link 
-              href="/login"
+              href="/biz/login"
               className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               onClick={() => setIsOpen(false)}
             >
               로그인
             </Link>
             <Link 
-              href="/signup"
+              href="/biz/register"
               className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               onClick={() => setIsOpen(false)}
             >

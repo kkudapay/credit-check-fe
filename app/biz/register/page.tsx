@@ -95,7 +95,7 @@ export default function SignUpPage() {
   };
 
   const handleGoHome = () => {
-    router.push('/');
+    router.push('/biz');
   };
 
   const isFormValid = () => {
@@ -238,7 +238,7 @@ export default function SignUpPage() {
               <div className="text-center">
                 <p className="text-gray-600">
                   이미 계정이 있으신가요?{' '}
-                  <Link href="/login" className="text-orange-500 hover:text-orange-600 font-medium">
+                  <Link href="/biz/login" className="text-orange-500 hover:text-orange-600 font-medium">
                     로그인
                   </Link>
                 </p>

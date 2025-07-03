@@ -1,19 +1,41 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { createBlogPost } from '@/lib/blog-utils';
+import { getBlogPost, updateBlogPost, type BlogPost } from '@/lib/blog-utils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 
-export default function CreateBlogPage() {
+export default function EditBlogPage() {
+  const params = useParams();
+  const router = useRouter();
+  const [post, setPost] = useState<BlogPost | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const router = useRouter();
+  const [notFound, setNotFound] = useState(false);
+
+  const postId = params.id as string;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const blogPost = getBlogPost(postId);
+      if (blogPost) {
+        setPost(blogPost);
+        setTitle(blogPost.title);
+        setContent(blogPost.content);
+      } else {
+        setNotFound(true);
+      }
+      setIsLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [postId]);
 
   const handleBack = () => {
     router.push('/biz/blog');
@@ -38,7 +60,7 @@ export default function CreateBlogPage() {
 
     // 저장 시뮬레이션
     setTimeout(() => {
-      createBlogPost({
+      updateBlogPost(postId, {
         title: title.trim(),
         content: content
       });
@@ -46,6 +68,73 @@ export default function CreateBlogPage() {
       router.push('/biz/blog');
     }, 1000);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
+        <div className="bg-white border-b mb-20">
+          <div className="mobile-container py-4">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="flex items-center space-x-1 text-gray-600"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>뒤로</span>
+              </Button>
+              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
+                꾸다 외상체크
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">글을 불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound || !post) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
+        <div className="bg-white border-b">
+          <div className="mobile-container py-4">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="flex items-center space-x-1 text-gray-600"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>뒤로</span>
+              </Button>
+              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
+                꾸다 외상체크
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mobile-container py-8">
+          <div className="text-center py-16">
+            <p className="text-gray-600 text-lg">
+              존재하지 않는 게시글입니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -74,7 +163,7 @@ export default function CreateBlogPage() {
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">글 작성</h1>
+          <h1 className="text-2xl font-bold text-gray-900">글 수정</h1>
           <Button
             onClick={handleSave}
             disabled={isSaving || !title.trim() || !content.trim()}

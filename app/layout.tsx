@@ -1,31 +1,11 @@
 //전체 사이트 공통 레이아웃 파일
 import './globals.css';
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { sharedMetadata } from './shared-metadata';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: '꾸다 외상체크 - 사업자번호 연체정보 실시간 조회',
-  description: '사업자번호로 연체정보, 신용위험도를 실시간 확인하세요. 거래 전 필수 체크! 매주 업데이트되는 신용정보 플랫폼.',
-  keywords: '사업자번호, 연체정보, 신용조회, 외상체크, 사업자조회, 신용위험',
-  openGraph: {
-    title: '꾸다 외상체크 - 사업자번호 연체정보 실시간 조회',
-    description: '사업자번호로 연체정보, 신용위험도를 실시간 확인하세요.',
-    url: 'https://kkudacheck.kr',
-    siteName: '꾸다 외상체크',
-    locale: 'ko_KR',
-    type: 'website',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
-  },
-};
+export const metadata = sharedMetadata;
 
 export default function RootLayout({
   children,
@@ -41,8 +21,8 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              "name": "꾸다 외상체크",
-              "description": "사업자번호 연체정보 실시간 조회 서비스",
+              "name": "꾸다 외상체크 - 연체내역을 사업자번호로 실시간 조회하세요",
+              "description": "개인사업자 사업자등록번호 조회. 사업자등록번호만 입력하고 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.",
               "url": "https://kkudacheck.kr",
               "applicationCategory": "BusinessApplication",
               "operatingSystem": "Web",

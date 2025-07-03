@@ -10,6 +10,8 @@ import { formatCurrency, calculateDaysAgo } from '@/lib/format-utils';
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import Timeline from '@/components/ui/timeline';
+
+import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 //회사 상세 페이지 렌더링 함수
 export default function CompanyDetailPage() {
   const params = useParams();
@@ -47,6 +49,7 @@ export default function CompanyDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
         {/* Header */}
         <div className="bg-white border-b mb-20">
           <div className="mobile-container py-4">
@@ -82,6 +85,7 @@ export default function CompanyDetailPage() {
   if (notFound || !companyData) {
     return (
       <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
             <div className="flex items-center justify-between">
@@ -116,6 +120,7 @@ export default function CompanyDetailPage() {
   //해당하는 회사 정보가 있을 경우
   return (
     <div className="min-h-screen bg-gray-50">
+      <HamburgerWithSidebar />
       {/* Header */}
       <div className="bg-white border-b mb-6">
         <div className="mobile-container py-4">

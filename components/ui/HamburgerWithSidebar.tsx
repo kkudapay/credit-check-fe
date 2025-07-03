@@ -1,47 +1,74 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Sling as Hamburger } from 'hamburger-react'
-import { X } from 'lucide-react'
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function HamburgerWithSidebar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      {/* 햄버거 버튼 */}
-      <div className="fixed top-4 right-4 z-50">
-        <Hamburger toggled={isOpen} toggle={setIsOpen} />
-      </div>
+      {/* Hamburger Menu Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsOpen(true)}
+        className="fixed top-4 right-4 z-50 bg-white shadow-lg hover:bg-gray-50"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
 
-      {/* 오버레이 배경 */}
+      {/* Sidebar Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-40"
+          className="fixed inset-0 bg-black bg-opacity-50 z-50"
           onClick={() => setIsOpen(false)}
-        ></div>
+        />
       )}
 
-      {/* 사이드바 */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="p-4 flex justify-between items-center border-b">
-          <span className="text-lg font-semibold">메뉴</span>
-          <button onClick={() => setIsOpen(false)}>
-            <X className="w-6 h-6 text-gray-600" />
-          </button>
-        </div>
+      {/* Sidebar */}
+      <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
+        <div className="p-6">
+          {/* Close Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4"
+          >
+            <X className="h-6 w-6" />
+          </Button>
 
-        <ul className="p-4 space-y-4 text-gray-800">
-          <li className="hover:text-orange-500 cursor-pointer">로그인</li>
-          <li className="hover:text-orange-500 cursor-pointer">블로그</li>
-          <li className="hover:text-orange-500 cursor-pointer">자주 묻는 질문</li>
-          <li className="hover:text-orange-500 cursor-pointer">로그아웃</li>
-        </ul>
+          {/* Navigation Menu */}
+          <nav className="mt-12 space-y-6">
+            <Link 
+              href="/biz"
+              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              홈
+            </Link>
+            <Link 
+              href="/biz/login"
+              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              로그인
+            </Link>
+            <Link 
+              href="/biz/register"
+              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              회원가입
+            </Link>
+          </nav>
+        </div>
       </div>
     </>
-  )
+  );
 }

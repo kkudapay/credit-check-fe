@@ -9,7 +9,7 @@ export default function BizLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <body>
-        <Toaster position="top-center" richColors /> {/* ✅ 여기가 중요 */}
+        <Toaster position="top-center" richColors /> 
         {children}
       </body>
     </html>

@@ -1,27 +1,21 @@
-import { supabase } from '@/lib/supabaseClient';
+'use client';
 
-export async function loginWithEmail(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+import { createClient } from './supabaseClient';
 
-  if (error) {
-    throw error;
-  }
+const supabase = createClient();
 
-  return data;
+// 로그인 함수
+export async function login(email: string, password: string) {
+  return await supabase.auth.signInWithPassword({ email, password });
 }
 
-//로그인 상태 확인
-export async function getCurrentUser() {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  return session?.user || null;
-}
-
+// 로그아웃 함수
 export async function logout() {
-  await supabase.auth.signOut();
+  return await supabase.auth.signOut();
+}
+
+// 현재 세션 확인 함수
+export async function getCurrentSession() {
+  const { data } = await supabase.auth.getSession();
+  return data.session;
 }

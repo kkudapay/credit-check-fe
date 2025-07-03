@@ -9,6 +9,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 
+import { createClient } from '@/lib/supabaseClient'
+import { login } from '@/lib/auth-utils';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +19,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const router = useRouter();
+  const supabase = createClient()
+  
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -32,8 +37,8 @@ export default function LoginPage() {
 
     if (!password.trim()) {
       newErrors.password = '비밀번호를 입력해주세요';
-    } else if (password.length < 6) {
-      newErrors.password = '비밀번호는 6자 이상이어야 합니다';
+    } else if (password.length < 3) {
+      newErrors.password = '비밀번호는 3자 이상이어야 합니다';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -42,14 +47,26 @@ export default function LoginPage() {
       return;
     }
 
-    // 로그인 처리 시뮬레이션
-    setTimeout(() => {
-      setIsLoading(false);
-      // 실제 로그인 로직 구현
-      console.log('Login attempted with:', { email, password });
-      // router.push('/dashboard'); // 로그인 성공 후 리다이렉트
-    }, 1000);
+    setIsLoading(true)
+
+    // 로그인 처리
+    const { data, error } = await login(email, password);
+
+    setIsLoading(false)
+
+    if (error) {
+      setErrors({ password: '이메일 또는 비밀번호가 올바르지 않습니다' })
+      setIsLoading(false)
+      return
+    }
+    console.log('로그인 성공!!!!:', data.user);
+
+    // 로그인 성공
+    router.refresh() // 세션 갱신
+    router.push('/biz') 
   };
+
+ 
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -61,7 +78,10 @@ export default function LoginPage() {
     router.push('/biz');
   };
 
+  
+  
   return (
+    
     <div className="min-h-screen bg-gray-50">
       <HamburgerWithSidebar />
       

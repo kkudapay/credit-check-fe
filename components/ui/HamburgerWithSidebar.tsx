@@ -1,15 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { getCurrentSession, logout } from '@/lib/auth-utils';
+
 
 export default function HamburgerWithSidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 로그인 여부 확인
+  useEffect(() => {
+    
+    const checkSession = async () => {
+    const session = await getCurrentSession();
+    setIsLoggedIn(!!session);
+  };
+
+    checkSession();
+    
+  }, []);
+
+
+
+  // 로그아웃 처리
+  const handleLogout = async () => {
+  await logout();
+  setIsLoggedIn(false);
+  setIsOpen(false);
+};
 
   return (
     <>
+    
       {/* Hamburger Menu Button */}
       <Button
         variant="ghost"
@@ -52,20 +77,34 @@ export default function HamburgerWithSidebar() {
             >
               홈
             </Link>
-            <Link 
-              href="/biz/login"
-              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              로그인
-            </Link>
-            <Link 
-              href="/biz/register"
-              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              회원가입
-            </Link>
+
+            
+            {isLoggedIn ? (
+              
+              <button
+                onClick={handleLogout}
+                className="block text-left w-full text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              >
+                로그아웃
+              </button>
+            ) : (
+              <>
+                <Link 
+                  href="/biz/login"
+                  className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  로그인
+                </Link>
+                <Link 
+                  href="/biz/register"
+                  className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  회원가입
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </div>

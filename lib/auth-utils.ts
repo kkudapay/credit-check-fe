@@ -19,3 +19,16 @@ export async function getCurrentSession() {
   const { data } = await supabase.auth.getSession();
   return data.session;
 }
+
+//회원가입 함수
+export async function register(email: string, password: string, name?: string) {
+  return await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        name, // user_metadata.name
+      },
+    },
+  });
+}

@@ -1,11 +1,17 @@
 import { sharedMetadata } from '../shared-metadata';
 
+import '../globals.css';
+import { Toaster } from 'sonner'; // sonner 알람 사용을 위해
+
 export const metadata = sharedMetadata;
 
-export default function BizLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
+export default function BizLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ko">
+      <body>
+        <Toaster position="top-center" richColors /> {/* ✅ 여기가 중요 */}
+        {children}
+      </body>
+    </html>
+  );
 }

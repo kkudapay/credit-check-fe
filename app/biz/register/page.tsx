@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
+import { register } from '@/lib/auth-utils';
+import { toast } from 'sonner';
 
-export default function SignUpPage() {
+export default function registerPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,7 +34,7 @@ export default function SignUpPage() {
       ...prev,
       [field]: value
     }));
-    
+
     // 에러 메시지 초기화
     if (errors[field as keyof typeof errors]) {
       setErrors(prev => ({
@@ -48,7 +50,7 @@ export default function SignUpPage() {
 
     // 유효성 검사
     const newErrors: typeof errors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = '이름을 입력해주세요';
     } else if (formData.name.trim().length < 2) {
@@ -80,12 +82,19 @@ export default function SignUpPage() {
     }
 
     // 회원가입 처리 시뮬레이션
-    setTimeout(() => {
-      setIsLoading(false);
-      // 실제 회원가입 로직 구현
-      console.log('Sign up attempted with:', formData);
-      // router.push('/login'); // 회원가입 성공 후 로그인 페이지로 리다이렉트
-    }, 1000);
+    const { data, error } = await register(formData.email, formData.password, formData.name);
+
+    setIsLoading(false);
+
+    if (error) {
+      setErrors({ email: error.message });
+      return;
+    }
+    toast.success('회원가입이 완료되었습니다!', {
+  duration: 2000, 
+});
+  
+    router.push('/biz/login');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -99,17 +108,17 @@ export default function SignUpPage() {
   };
 
   const isFormValid = () => {
-    return formData.name.trim() && 
-           formData.email.trim() && 
-           formData.password.trim() && 
-           formData.confirmPassword.trim() &&
-           formData.password === formData.confirmPassword;
+    return formData.name.trim() &&
+      formData.email.trim() &&
+      formData.password.trim() &&
+      formData.confirmPassword.trim() &&
+      formData.password === formData.confirmPassword;
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <HamburgerWithSidebar />
-      
+
       <div className="min-h-screen bg-gray-50 flex flex-col">
         {/* Header */}
         <div className="bg-white border-b mb-10">

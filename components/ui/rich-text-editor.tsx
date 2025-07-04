@@ -35,7 +35,8 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   const [imageAlt, setImageAlt] = useState('');
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const [isFocused, setIsFocused] = useState(false);
+  
   const fontSizes = [
     { label: '매우 작게', value: '1' },
     { label: '작게', value: '2' },
@@ -53,13 +54,14 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
     '#0000ff', '#6600ff', '#cc00ff', '#ff00ff', '#ff00cc', '#ff0066',
     '#8b4513', '#a0522d', '#cd853f', '#daa520', '#b8860b', '#ffd700'
   ];
-  /*
-    useEffect(() => {
-      if (editorRef.current && content !== editorRef.current.innerHTML) {
-        editorRef.current.innerHTML = content;
-      }
-    }, [content]);
-  */
+
+   useEffect(() => {
+  if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
+    editorRef.current.innerHTML = content;
+  }
+}, [content, isFocused]);
+
+  
   const handleCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     updateContent();
@@ -262,20 +264,25 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
       {/* Editor */}
 
+       <div className="relative">
+      {/* placeholder는 content가 비어있고 포커스가 없을 때만 표시 */}
+      {!isFocused && !content && (
+        <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
+          {placeholder || '내용을 입력하세요...'}
+        </div>
+      )}
+
       <div
         ref={editorRef}
         contentEditable
         onInput={updateContent}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         className="min-h-[300px] p-4 focus:outline-none prose prose-sm max-w-none"
         style={{ wordBreak: 'break-word' }}
         suppressContentEditableWarning={true}
-      >
-        {!content && (
-          <div className="text-gray-400 pointer-events-none">
-            {placeholder || '내용을 입력하세요...'}
-          </div>
-        )}
-      </div>
+      />
+    </div>
 
       {/* Link Dialog */}
       {showLinkDialog && (

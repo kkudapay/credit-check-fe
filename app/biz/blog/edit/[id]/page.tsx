@@ -198,6 +198,7 @@ export default function EditBlogPage() {
         <div className="bg-white rounded-lg border border-gray-200">
           <RichTextEditor
             content={content}
+            
             onChange={setContent}
             placeholder="내용을 입력하세요..."
           />

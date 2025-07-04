@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getCurrentSession, logout } from '@/lib/auth-utils';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+
 
 
 export default function HamburgerWithSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   // 로그인 여부 확인
   useEffect(() => {
@@ -28,14 +31,29 @@ export default function HamburgerWithSidebar() {
 
   // 로그아웃 처리
   const handleLogout = async () => {
-  await logout(); //세션 제거
-  setIsLoggedIn(false); //클라이언트 상태 초기화
-  setIsOpen(false); //햄버거 메뉴 닫기
-  toast.info('정상적으로 로그아웃 되었습니다.', {
-  duration: 2000, 
-});
-  
+  try {
+    const { error } = await logout();
+
+    if (error) {
+      toast.error('로그아웃 중 오류가 발생했습니다.');
+      console.error('Logout Error:', error.message);
+      return;
+    }
+
+    setIsLoggedIn(false);
+    setIsOpen(false);
+    toast.info('정상적으로 로그아웃 되었습니다.', {
+      duration: 2000,
+    });
+
+    router.push('/biz');
+    router.refresh();
+  } catch (err) {
+    console.error('Unexpected Logout Error:', err);
+    toast.error('예상치 못한 오류가 발생했습니다.');
+  }
 };
+
 
   return (
     <>

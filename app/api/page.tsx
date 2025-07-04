@@ -11,7 +11,7 @@ export default function TestMetadataUpdatePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: '5c569b54-2d84-4494-b4c5-0807b37cb0f2',
-          metadata: { plan: 'trial' },
+          metadata: { role: 'admin' },
         }),
       });
 

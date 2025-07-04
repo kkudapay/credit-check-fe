@@ -8,12 +8,14 @@ import { getBlogPosts, deleteBlogPost, type BlogPost } from '@/lib/blog-utils';
 import { formatDate, isNewPost } from '@/lib/format-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import DOMPurify from 'dompurify';
+import { createClient } from '@/lib/supabaseClient';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,6 +23,15 @@ export default function BlogPage() {
       setPosts(blogPosts);
       setIsLoading(false);
     }, 500);
+
+    const checkAdmin = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const role = session?.user?.app_metadata?.role;
+      setIsAdmin(role === 'admin');
+    };
+
+    checkAdmin();
 
     return () => clearTimeout(timer);
   }, []);
@@ -116,13 +127,15 @@ export default function BlogPage() {
         {/* Page Title and Create Button */}
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">블로그</h1>
-          <Button
-            onClick={handleCreatePost}
-            className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-4 py-2 flex items-center space-x-2"
-          >
-            <Plus className="h-4 w-4" />
-            <span>글 작성</span>
-          </Button>
+          {isAdmin && (
+            <Button
+              onClick={handleCreatePost}
+              className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-4 py-2 flex items-center space-x-2"
+            >
+              <Plus className="h-4 w-4" />
+              <span>글 작성</span>
+            </Button>
+          )}
         </div>
 
         {/* Blog Posts */}
@@ -130,12 +143,14 @@ export default function BlogPage() {
           {posts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-gray-600 text-lg mb-4">아직 작성된 글이 없습니다.</p>
-              <Button
-                onClick={handleCreatePost}
-                className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-6 py-2"
-              >
-                첫 번째 글 작성하기
-              </Button>
+              {isAdmin && (
+                <Button
+                  onClick={handleCreatePost}
+                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-6 py-2"
+                >
+                  첫 번째 글 작성하기
+                </Button>
+              )}
             </div>
           ) : (
             posts.map((post) => (
@@ -175,8 +190,8 @@ export default function BlogPage() {
                         className="prose prose-sm max-w-none mb-4"
                         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
                       />
-
                       {/* Action Buttons */}
+                      {isAdmin && (
                       <div className="flex items-center justify-end space-x-2 pt-4 border-t border-gray-100">
                         <Button
                           variant="outline"
@@ -202,10 +217,12 @@ export default function BlogPage() {
                           <Trash2 className="h-4 w-4" />
                           <span>삭제</span>
                         </Button>
-                      </div>
+                      </div>)}
+
                     </div>
                   </div>
                 )}
+                
               </div>
             ))
           )}

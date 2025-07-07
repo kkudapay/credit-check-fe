@@ -12,16 +12,20 @@ import { createClient } from '@/lib/supabaseClient';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
+  const [expandedPosts, setExpandedPosts] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const blogPosts = getBlogPosts();
-      setPosts(blogPosts);
-      setIsLoading(false);
+      const getContent = async () => {
+        const blogPosts = await getBlogPosts();
+        setPosts(blogPosts);
+        setIsLoading(false);
+      }
+      getContent();
+
     }, 500);
 
     const checkAdmin = async () => {
@@ -44,18 +48,18 @@ export default function BlogPage() {
     router.push('/biz/blog/create');
   };
 
-  const handleEditPost = (postId: string) => {
+  const handleEditPost = (postId: number) => {
     router.push(`/biz/blog/edit/${postId}`);
   };
 
-  const handleDeletePost = (postId: string) => {
+  const handleDeletePost = (postId: number) => {
     if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
       deleteBlogPost(postId);
       setPosts(posts.filter(post => post.id !== postId));
     }
   };
 
-  const togglePostExpansion = (postId: string) => {
+  const togglePostExpansion = (postId: number) => {
     const newExpanded = new Set(expandedPosts);
     if (newExpanded.has(postId)) {
       newExpanded.delete(postId);
@@ -192,37 +196,37 @@ export default function BlogPage() {
                       />
                       {/* Action Buttons */}
                       {isAdmin && (
-                      <div className="flex items-center justify-end space-x-2 pt-4 border-t border-gray-100">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditPost(post.id);
-                          }}
-                          className="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
-                        >
-                          <Edit className="h-4 w-4" />
-                          <span>수정</span>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeletePost(post.id);
-                          }}
-                          className="flex items-center space-x-1 text-red-600 hover:text-red-800 hover:border-red-300"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          <span>삭제</span>
-                        </Button>
-                      </div>)}
+                        <div className="flex items-center justify-end space-x-2 pt-4 border-t border-gray-100">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditPost(post.id);
+                            }}
+                            className="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+                          >
+                            <Edit className="h-4 w-4" />
+                            <span>수정</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePost(post.id);
+                            }}
+                            className="flex items-center space-x-1 text-red-600 hover:text-red-800 hover:border-red-300"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span>삭제</span>
+                          </Button>
+                        </div>)}
 
                     </div>
                   </div>
                 )}
-                
+
               </div>
             ))
           )}

@@ -36,15 +36,20 @@ export default function CreateBlogPage() {
 
     setIsSaving(true);
 
-    // 저장 시뮬레이션
-    setTimeout(() => {
-      createBlogPost({
-        title: title.trim(),
-        content: content
-      });
-      setIsSaving(false);
-      router.push('/biz/blog');
-    }, 1000);
+    
+    try {
+    await createBlogPost({
+      title: title.trim(),
+      content: content
+    });
+
+    router.push('/biz/blog');
+  } catch (error) {
+    console.error('글 저장 실패:', error);
+    alert('글 저장 중 오류가 발생했습니다.');
+  } finally {
+    setIsSaving(false);
+  }
   };
 
   return (

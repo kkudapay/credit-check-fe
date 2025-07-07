@@ -19,11 +19,12 @@ export default function EditBlogPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
-  const postId = params.id as string;
+  const postId = Number(params.id);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const blogPost = getBlogPost(postId);
+  const timer = setTimeout(() => {
+    const fetchPost = async () => {
+      const blogPost = await getBlogPost(postId);
       if (blogPost) {
         setPost(blogPost);
         setTitle(blogPost.title);
@@ -32,10 +33,14 @@ export default function EditBlogPage() {
         setNotFound(true);
       }
       setIsLoading(false);
-    }, 500);
+    };
 
-    return () => clearTimeout(timer);
-  }, [postId]);
+    fetchPost();
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, [postId]);
+
 
   const handleBack = () => {
     router.push('/biz/blog');

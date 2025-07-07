@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getCompanyData, type CompanyData } from '@/lib/business-utils';
+import { getTotalData, type BusinessData, type OverdueData } from '@/lib/business-utils';
 import { formatCurrency, calculateDaysAgo } from '@/lib/format-utils';
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
@@ -16,7 +16,7 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 export default function CompanyDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [companyData, setCompanyData] = useState<CompanyData | null>(null);
+  const [companyData, setCompanyData] = useState<BusinessData & OverdueData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showGraph, setShowGraph] = useState(false); // 🔹 그래프 토글 상태
@@ -26,19 +26,29 @@ export default function CompanyDetailPage() {
   //사용자 흐름에 따라 알맞은 요소를 화면에 렌더링함.
   //(리액트 컴포넌트가 렌더링될 때마다 반복 수행)
   useEffect(() => {
-
     const timer = setTimeout(() => {
-      const data = getCompanyData(businessNumber);
-      if (data) {
-        setCompanyData(data);
-      } else {
-        setNotFound(true);
-      }
-      setIsLoading(false);
+      const fetchData = async () => {
+        try {
+          const data = await getTotalData(businessNumber);
+          if (data) {
+            setCompanyData(data);
+          } else {
+            setNotFound(true);
+          }
+        } catch (error) {
+          console.error("getTotalData 오류:", error);
+          setNotFound(true);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchData();
     }, 1000);
 
     return () => clearTimeout(timer);
   }, [businessNumber]);
+
 
   //URL /biz로 이동하는 함수 (뒤로가기)
   const handleBack = () => {

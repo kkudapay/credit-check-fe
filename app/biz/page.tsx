@@ -27,8 +27,8 @@ export default function BizSearchPage() {
     setNoResults(false);
 
 
-    setTimeout(() => {
-      const results = searchCompanies(searchQuery); //검색어에 해당하는 사업자 배열 반환받음
+    setTimeout(async () => {
+      const results = await searchCompanies(searchQuery); //검색어에 해당하는 사업자 배열 반환받음
       setSearchResults(results);
       setShowResults(true);
       setNoResults(results.length === 0); //배열의 요소가 없으면 (=길이가 0이면) true

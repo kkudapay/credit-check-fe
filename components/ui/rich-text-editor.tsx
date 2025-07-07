@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import DOMPurify from 'dompurify';
-import {uploadImageToSupabase} from '@/lib/blog-utils'
+import { uploadImageToSupabase } from '@/lib/blog-utils'
 
 interface RichTextEditorProps {
   content: string;
@@ -32,18 +32,15 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
   const [showColorPalette, setShowColorPalette] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
-  const [linkText, setLinkText] = useState('');
-  //const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>('');
   const editorRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
-
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
-const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-const [imageAlt, setImageAlt] = useState('');
-const [showImageDialog, setShowImageDialog] = useState(false);
-const fileInputRef = useRef<HTMLInputElement>(null);
-  
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imageAlt, setImageAlt] = useState('');
+  const [showImageDialog, setShowImageDialog] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [savedRange, setSavedRange] = useState<Range | null>(null);
+
   const fontSizes = [
     { label: '매우 작게', value: '1' },
     { label: '작게', value: '2' },
@@ -62,14 +59,14 @@ const fileInputRef = useRef<HTMLInputElement>(null);
     '#8b4513', '#a0522d', '#cd853f', '#daa520', '#b8860b', '#ffd700'
   ];
 
-   useEffect(() => {
-  if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
-    const clean = DOMPurify.sanitize(content);
-    editorRef.current.innerHTML = clean;
-  }
-}, [content, isFocused]);
+  useEffect(() => {
+    if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
+      const clean = DOMPurify.sanitize(content);
+      editorRef.current.innerHTML = clean;
+    }
+  }, [content, isFocused]);
 
-  
+
   const handleCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     updateContent();
@@ -78,14 +75,14 @@ const fileInputRef = useRef<HTMLInputElement>(null);
   const updateContent = () => {
     if (editorRef.current) {
       const before = editorRef.current.innerHTML;
-    const clean = DOMPurify.sanitize(before);
+      const clean = DOMPurify.sanitize(before);
 
-    if (clean.length > MAX_HTML_LENGTH) {
-      alert(`글이 너무 깁니다. ${MAX_HTML_LENGTH}자 이내로 작성해주세요.`);
-      return;
-    }
+      if (clean.length > MAX_HTML_LENGTH) {
+        alert(`글이 너무 깁니다. ${MAX_HTML_LENGTH}자 이내로 작성해주세요.`);
+        return;
+      }
 
-    onChange(clean);
+      onChange(clean);
     }
   };
 
@@ -99,80 +96,103 @@ const fileInputRef = useRef<HTMLInputElement>(null);
     setShowColorPalette(false);
   };
 
-  const insertLink = () => {
-    if (linkUrl && linkText && editorRef.current) {
-      editorRef.current.focus();
-      const linkHtml = `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">${linkText}</a>`;
-      handleCommand('insertHTML', linkHtml);
-      setLinkUrl('');
-      setLinkText('');
-      setShowLinkDialog(false);
+
+const openLinkDialog = () => {
+  const selection = window.getSelection();
+  if (
+    selection &&
+    selection.rangeCount > 0 &&
+    !selection.isCollapsed &&
+    editorRef.current?.contains(selection.anchorNode)
+  ) {
+    const range = selection.getRangeAt(0);
+    const text = range.toString().trim();
+
+    if (text.length === 0) {
+      alert("빈 텍스트에는 링크를 걸 수 없습니다.");
+      return;
     }
-  };
 
-/*
-  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      //setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  */
- const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const files = event.target.files;
-  if (!files || files.length === 0) return;
-
-  const selectedFiles = Array.from(files);
-  setSelectedImageFiles((prev) => [...prev, ...selectedFiles]);
-
-  const previewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
-  setImagePreviews((prev) => [...prev, ...previewUrls]);
-
-  if (fileInputRef.current) {
-    fileInputRef.current.value = ''; // 재선택 허용
+    const refinedRange = document.createRange();
+    refinedRange.setStart(range.startContainer, range.startOffset);
+    refinedRange.setEnd(range.endContainer, range.endOffset);
+    setSavedRange(refinedRange);
+    setShowLinkDialog(true);
+  } else {
+    alert("링크를 적용할 텍스트를 먼저 드래그로 선택하세요.");
   }
 };
-/*
-  const insertImage = () => {
-    if (imagePreview && editorRef.current) {
-      editorRef.current.focus(); // 📌 포커스 복원
-      const imageHtml = `<img src="${imagePreview}" alt="${imageAlt}" class="max-w-full h-auto rounded-lg my-2" />`;
-      handleCommand('insertHTML', imageHtml);
-      //setSelectedImage(null);
-      setImagePreview('');
-      setImageAlt('');
-      setShowImageDialog(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+
+const insertLink = () => {
+  if (!linkUrl || !savedRange || !editorRef.current) return;
+
+  const anchor = document.createElement('a');
+  anchor.href = linkUrl;
+  anchor.target = '_blank';
+  anchor.rel = 'noopener noreferrer';
+  anchor.className = 'text-blue-600 hover:text-blue-800 underline';
+
+  anchor.appendChild(savedRange.extractContents());
+  savedRange.insertNode(anchor);
+
+
+
+  
+  const newRange = document.createRange();
+  newRange.selectNode(anchor);
+  
+
+
+
+  updateContent();
+
+  
+  setLinkUrl('');
+  setShowLinkDialog(false);
+  console.log("저장하고 나서 range: ", savedRange);
+  setSavedRange(null);
+  
+
+};
+
+
+
+
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const selectedFiles = Array.from(files);
+    setSelectedImageFiles((prev) => [...prev, ...selectedFiles]);
+
+    const previewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prev) => [...prev, ...previewUrls]);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // 재선택 허용
     }
   };
-  */
+
 
   const insertImages = async () => {
-  if (selectedImageFiles.length === 0 || !editorRef.current) return;
+    if (selectedImageFiles.length === 0 || !editorRef.current) return;
 
-  editorRef.current.focus();
+    editorRef.current.focus();
 
-  for (let i = 0; i < selectedImageFiles.length; i++) {
-    const file = selectedImageFiles[i];
-    const imageUrl = await uploadImageToSupabase(file);
+    for (let i = 0; i < selectedImageFiles.length; i++) {
+      const file = selectedImageFiles[i];
+      const imageUrl = await uploadImageToSupabase(file);
 
-    const imageHtml = `<img src="${imageUrl}" alt="${imageAlt || 'image'}" class="max-w-full h-auto rounded-lg my-2" />`;
-    handleCommand('insertHTML', imageHtml);
-  }
+      const imageHtml = `<img src="${imageUrl}" alt="${imageAlt || 'image'}" class="max-w-full h-auto rounded-lg my-2" />`;
+      handleCommand('insertHTML', imageHtml);
+    }
 
-  // 초기화
-  setSelectedImageFiles([]);
-  setImagePreviews([]);
-  setImageAlt('');
-  setShowImageDialog(false);
-};
+    // 초기화
+    setSelectedImageFiles([]);
+    setImagePreviews([]);
+    setImageAlt('');
+    setShowImageDialog(false);
+  };
 
 
   const insertDivider = () => {
@@ -291,7 +311,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowLinkDialog(true)}
+              onClick={openLinkDialog}
               className="h-8 w-8 p-0"
             >
               <Link className="h-4 w-4" />
@@ -318,25 +338,36 @@ const fileInputRef = useRef<HTMLInputElement>(null);
 
       {/* Editor */}
 
-       <div className="relative">
-      {/* placeholder는 content가 비어있고 포커스가 없을 때만 표시 */}
-      {!isFocused && !content && (
-        <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
-          {placeholder || '내용을 입력하세요...'}
-        </div>
-      )}
+      <div className="relative">
+        {/* placeholder는 content가 비어있고 포커스가 없을 때만 표시 */}
+        {!isFocused && !content && (
+          <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
+            {placeholder || '내용을 입력하세요...'}
+          </div>
+        )}
 
-      <div
-        ref={editorRef}
-        contentEditable
-        onInput={updateContent}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        className="min-h-[300px] p-4 focus:outline-none prose prose-sm max-w-none"
-        style={{ wordBreak: 'break-word' }}
-        suppressContentEditableWarning={true}
-      />
-    </div>
+        <div
+          ref={editorRef}
+          contentEditable
+          
+          onInput={(e) => {
+            updateContent();
+            
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          /*
+          onMouseDown={() => {
+            // 포커스 이동 전에 현재 커서 위치 저장
+            handleSaveSelection();
+          }}
+          onMouseUp={() => { handleSaveSelection(); }}
+          */
+          className="min-h-[300px] p-4 focus:outline-none prose prose-sm max-w-none"
+          style={{ wordBreak: 'break-word' }}
+          suppressContentEditableWarning={true}
+        />
+      </div>
 
       {/* Link Dialog */}
       {showLinkDialog && (
@@ -344,7 +375,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
           <div className="bg-white rounded-lg p-6 w-80 mx-4">
             <h3 className="text-lg font-semibold mb-4">링크 추가</h3>
             <div className="space-y-4">
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   링크 텍스트
                 </label>
@@ -354,7 +385,8 @@ const fileInputRef = useRef<HTMLInputElement>(null);
                   onChange={(e) => setLinkText(e.target.value)}
                   placeholder="표시할 텍스트"
                 />
-              </div>
+              </div> */}
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   URL
@@ -369,17 +401,18 @@ const fileInputRef = useRef<HTMLInputElement>(null);
               <div className="flex space-x-2">
                 <Button
                   onClick={insertLink}
-                  disabled={!linkUrl || !linkText}
+                  disabled={!linkUrl}// || !linkText}
                   className="flex-1 bg-orange-500 hover:bg-orange-600"
                 >
                   추가
                 </Button>
+                
                 <Button
                   variant="outline"
                   onClick={() => {
                     setShowLinkDialog(false);
                     setLinkUrl('');
-                    setLinkText('');
+                    //setLinkText('');
                   }}
                   className="flex-1"
                 >
@@ -412,22 +445,22 @@ const fileInputRef = useRef<HTMLInputElement>(null);
               </div>
 
               {imagePreviews.length > 0 && (
-  <div>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      미리보기
-    </label>
-    <div className="flex flex-wrap gap-2">
-      {imagePreviews.map((src, idx) => (
-        <img
-          key={idx}
-          src={src}
-          alt={`미리보기 ${idx}`}
-          className="max-w-full h-24 rounded border"
-        />
-      ))}
-    </div>
-  </div>
-)}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    미리보기
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {imagePreviews.map((src, idx) => (
+                      <img
+                        key={idx}
+                        src={src}
+                        alt={`미리보기 ${idx}`}
+                        className="max-w-full h-24 rounded border"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
 
               <div>
@@ -454,7 +487,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
                   onClick={() => {
                     setShowImageDialog(false);
                     //setSelectedImage(null);
-                    setImagePreview('');
+                    //setImagePreview('');
                     setImageAlt('');
                     if (fileInputRef.current) {
                       fileInputRef.current.value = '';

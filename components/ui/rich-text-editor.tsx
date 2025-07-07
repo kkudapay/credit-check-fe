@@ -1,5 +1,7 @@
 'use client';
 
+const MAX_HTML_LENGTH = 10000;
+
 import { useState, useRef, useEffect } from 'react';
 import {
   Bold,
@@ -16,6 +18,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import DOMPurify from 'dompurify';
+import {uploadImageToSupabase} from '@/lib/blog-utils'
 
 interface RichTextEditorProps {
   content: string;
@@ -25,17 +29,20 @@ interface RichTextEditorProps {
 
 export default function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
   const [showLinkDialog, setShowLinkDialog] = useState(false);
-  const [showImageDialog, setShowImageDialog] = useState(false);
   const [showFontSizeDropdown, setShowFontSizeDropdown] = useState(false);
   const [showColorPalette, setShowColorPalette] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  //const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
-  const [imageAlt, setImageAlt] = useState('');
   const editorRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+
+  const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
+const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+const [imageAlt, setImageAlt] = useState('');
+const [showImageDialog, setShowImageDialog] = useState(false);
+const fileInputRef = useRef<HTMLInputElement>(null);
   
   const fontSizes = [
     { label: '매우 작게', value: '1' },
@@ -57,7 +64,8 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
    useEffect(() => {
   if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
-    editorRef.current.innerHTML = content;
+    const clean = DOMPurify.sanitize(content);
+    editorRef.current.innerHTML = clean;
   }
 }, [content, isFocused]);
 
@@ -69,7 +77,15 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
   const updateContent = () => {
     if (editorRef.current) {
-      onChange(editorRef.current.innerHTML);
+      const before = editorRef.current.innerHTML;
+    const clean = DOMPurify.sanitize(before);
+
+    if (clean.length > MAX_HTML_LENGTH) {
+      alert(`글이 너무 깁니다. ${MAX_HTML_LENGTH}자 이내로 작성해주세요.`);
+      return;
+    }
+
+    onChange(clean);
     }
   };
 
@@ -94,11 +110,11 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
     }
   };
 
-
+/*
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedImage(file);
+      //setSelectedImage(file);
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
@@ -106,13 +122,28 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       reader.readAsDataURL(file);
     }
   };
+  */
+ const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
 
+  const selectedFiles = Array.from(files);
+  setSelectedImageFiles((prev) => [...prev, ...selectedFiles]);
+
+  const previewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+  setImagePreviews((prev) => [...prev, ...previewUrls]);
+
+  if (fileInputRef.current) {
+    fileInputRef.current.value = ''; // 재선택 허용
+  }
+};
+/*
   const insertImage = () => {
     if (imagePreview && editorRef.current) {
       editorRef.current.focus(); // 📌 포커스 복원
       const imageHtml = `<img src="${imagePreview}" alt="${imageAlt}" class="max-w-full h-auto rounded-lg my-2" />`;
       handleCommand('insertHTML', imageHtml);
-      setSelectedImage(null);
+      //setSelectedImage(null);
       setImagePreview('');
       setImageAlt('');
       setShowImageDialog(false);
@@ -121,6 +152,29 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       }
     }
   };
+  */
+
+  const insertImages = async () => {
+  if (selectedImageFiles.length === 0 || !editorRef.current) return;
+
+  editorRef.current.focus();
+
+  for (let i = 0; i < selectedImageFiles.length; i++) {
+    const file = selectedImageFiles[i];
+    const imageUrl = await uploadImageToSupabase(file);
+
+    const imageHtml = `<img src="${imageUrl}" alt="${imageAlt || 'image'}" class="max-w-full h-auto rounded-lg my-2" />`;
+    handleCommand('insertHTML', imageHtml);
+  }
+
+  // 초기화
+  setSelectedImageFiles([]);
+  setImagePreviews([]);
+  setImageAlt('');
+  setShowImageDialog(false);
+};
+
+
   const insertDivider = () => {
     const dividerHtml = '<hr class="my-4 border-gray-300" />';
     handleCommand('insertHTML', dividerHtml);
@@ -351,23 +405,30 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleImageSelect}
                   className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
                 />
               </div>
 
-              {imagePreview && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    미리보기
-                  </label>
-                  <img
-                    src={imagePreview}
-                    alt="미리보기"
-                    className="max-w-full h-auto max-h-40 rounded border"
-                  />
-                </div>
-              )}
+              {imagePreviews.length > 0 && (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      미리보기
+    </label>
+    <div className="flex flex-wrap gap-2">
+      {imagePreviews.map((src, idx) => (
+        <img
+          key={idx}
+          src={src}
+          alt={`미리보기 ${idx}`}
+          className="max-w-full h-24 rounded border"
+        />
+      ))}
+    </div>
+  </div>
+)}
+
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -382,8 +443,8 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
               </div>
               <div className="flex space-x-2">
                 <Button
-                  onClick={insertImage}
-                  disabled={!imagePreview}
+                  onClick={insertImages}
+                  disabled={!imagePreviews}
                   className="flex-1 bg-orange-500 hover:bg-orange-600"
                 >
                   추가
@@ -392,7 +453,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
                   variant="outline"
                   onClick={() => {
                     setShowImageDialog(false);
-                    setSelectedImage(null);
+                    //setSelectedImage(null);
                     setImagePreview('');
                     setImageAlt('');
                     if (fileInputRef.current) {

@@ -13,7 +13,7 @@ import {
   Image,
   Minus,
   Type,
-  Palette,
+  Palette, 
   ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';

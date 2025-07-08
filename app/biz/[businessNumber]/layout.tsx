@@ -1,6 +1,6 @@
 //동적 메타데이터 설정을 위한 함수를 담은 파일
 import { Metadata } from 'next';
-import { getCompanyData } from '@/lib/business-utils';
+import { getTotalData } from '@/lib/business-utils';
 
 //변수지정
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 //동적 메타데이터 불러오는 함수, 사업자번호를 입력받음.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const businessNumber = params.businessNumber;
-  const companyData = getCompanyData(businessNumber); //입력받은 사업자 번호에 해당하는 사업자 정보를 받아옴
+  const companyData = await getTotalData(businessNumber); //입력받은 사업자 번호에 해당하는 사업자 정보를 받아옴
   
   if (!companyData) {
     return {

@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getTotalData, type BusinessData, type OverdueData } from '@/lib/business-utils';
-import { formatCurrency, calculateDaysAgo } from '@/lib/format-utils';
+import { getTotalData, formatBusinessNumber, type BusinessData, type OverdueData } from '@/lib/business-utils';
+import { formatCurrency, calculateDaysAgo, format_date } from '@/lib/format-utils';
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import Timeline from '@/components/ui/timeline';
@@ -26,28 +26,30 @@ export default function CompanyDetailPage() {
   //사용자 흐름에 따라 알맞은 요소를 화면에 렌더링함.
   //(리액트 컴포넌트가 렌더링될 때마다 반복 수행)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const fetchData = async () => {
-        try {
-          const data = await getTotalData(businessNumber);
-          if (data) {
-            setCompanyData(data);
-          } else {
-            setNotFound(true);
-          }
-        } catch (error) {
-          console.error("getTotalData 오류:", error);
+  const timer = setTimeout(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getTotalData(businessNumber); // 🔧 await 추가
+        if (data) {
+          setCompanyData(data);
+          console.log(data);
+        } else {
           setNotFound(true);
-        } finally {
-          setIsLoading(false);
         }
-      };
+      } catch (error) {
+        console.error("getTotalData 오류:", error);
+        setNotFound(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      fetchData();
-    }, 1000);
+    fetchData();
+  }, 1000);
 
-    return () => clearTimeout(timer);
-  }, [businessNumber]);
+  return () => clearTimeout(timer);
+}, [businessNumber]);
+
 
 
   //URL /biz로 이동하는 함수 (뒤로가기)
@@ -242,7 +244,7 @@ export default function CompanyDetailPage() {
             <div className="bg-white rounded-lg p-4 border border-gray-200 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업자등록번호</span>
-                <span className="font-medium">{companyData.businessNumber}</span>
+                <span className="font-medium">{formatBusinessNumber(companyData.businessNumber)}</span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -274,7 +276,9 @@ export default function CompanyDetailPage() {
               <div className="flex items-start justify-between">
                 <span className="text-gray-700">주소</span>
                 <span className="font-medium text-right max-w-[200px]">
-                  {companyData.address}
+                  {companyData.address
+                    ? `${companyData.address}`
+                    : '-'}
                 </span>
               </div>
 
@@ -283,7 +287,7 @@ export default function CompanyDetailPage() {
                 <span className="text-gray-700">폐업일</span>
                 <span className="font-medium">
                   {companyData.closureDate
-                    ? `${companyData.closureDate}`
+                    ? `${format_date(companyData.closureDate)}`
                     : '-'}
                 </span>
               </div>

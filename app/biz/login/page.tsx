@@ -168,16 +168,16 @@ export default function LoginPage() {
                   '로그인'
                 )}
               </Button>
-
-              {/* Sign Up Link */}
-              <div className="text-center">
+              
+              {/* <div className="text-center">
                 <p className="text-gray-600">
                   아직 계정이 없으신가요?{' '}
                   <Link href="/biz/register" className="text-orange-500 hover:text-orange-600 font-medium">
                     회원가입
                   </Link>
                 </p>
-              </div>
+              </div> */}
+              
             </div>
           </div>
         </div>

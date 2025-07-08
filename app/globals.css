@@ -154,3 +154,7 @@
 .prose li {
   margin-bottom: 0.25rem;
 }
+
+::-ms-reveal {
+    display: none;
+}

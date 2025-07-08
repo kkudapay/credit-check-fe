@@ -3,6 +3,14 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { sharedMetadata } from './shared-metadata';
 
+// GTM을 위한 값 선언
+declare global {
+  interface Window {
+    dataLayer: Record<string, any>[];
+  }
+}
+
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = sharedMetadata;

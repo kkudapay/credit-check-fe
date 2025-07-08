@@ -50,7 +50,13 @@ export default function CompanyDetailPage() {
   return () => clearTimeout(timer);
 }, [businessNumber]);
 
-
+const handleClick_GTM = () => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'button_click',
+    button_id: 'overdue_detail'
+  });
+};
 
   //URL /biz로 이동하는 함수 (뒤로가기)
   const handleBack = () => {
@@ -168,8 +174,9 @@ export default function CompanyDetailPage() {
             <div className="flex items-center mb-3">
               <h2 className="text-lg font-semibold text-gray-900 mr-2">연체 정보</h2>
               {companyData.overdueInfo.hasOverdue && (<button
-                onClick={() => setShowGraph(!showGraph)}
+                onClick={() => {handleClick_GTM(); setShowGraph(!showGraph);}}
                 className="text-gray-600 hover:text-gray-800"
+                data-gtm-id="overdue_detail"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>)}

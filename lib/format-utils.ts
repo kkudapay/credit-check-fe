@@ -35,6 +35,19 @@ export function formatDate(date: string): string {
   });
 }
 
+export function format_date (dateString: string): string {
+  if (!/^\d{8}$/.test(dateString)) {
+    throw new Error("올바르지 않은 날짜 형식입니다. (예: '20240502')");
+  }
+
+  const year = dateString.slice(0, 4);
+  const month = dateString.slice(4, 6);
+  const day = dateString.slice(6, 8);
+
+  return `${year}-${month}-${day}`;
+}
+
+
 // 새 게시글 여부 확인 (4일 이내)
 export const isNewPost = (dateString: string): boolean => {
   const daysAgo = calculateDaysAgo(dateString);

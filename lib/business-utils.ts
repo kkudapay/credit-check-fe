@@ -127,7 +127,7 @@ export async function getBusinessData(bizNumber: string): Promise<BusinessData |
     if (!company) return null;
 
 
-
+console.log(company);
     const mappedData: BusinessData = {
       businessNumber: company.bno ?? "",
       taxpayerStatus: company.b_stt ?? "",
@@ -136,7 +136,7 @@ export async function getBusinessData(bizNumber: string): Promise<BusinessData |
       businessType: company.companyTpye ?? "", // 오타 주의
       companyName: company.name ?? "",
       address: company.address ?? "",
-      closureDate: company.closureDate ?? ""
+      closureDate: company.EndDt ?? ""
     };
 
     return mappedData;

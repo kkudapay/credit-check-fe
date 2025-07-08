@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { getBlogPost, updateBlogPost, type BlogPost } from '@/lib/blog-utils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
+import { getCurrentSession } from '@/lib/auth-utils';
 
 export default function EditBlogPage() {
   const params = useParams();
@@ -18,10 +19,29 @@ export default function EditBlogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
 
   const postId = Number(params.id);
 
-  useEffect(() => {
+  // 로그인 여부 확인
+useEffect(() => {
+  const checkSession = async () => {
+    const session = await getCurrentSession();
+    setIsLoggedIn(!!session); // true 또는 false로 설정됨
+  };
+
+  checkSession();
+}, []);
+
+useEffect(() => {
+  if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
+
+  if (!isLoggedIn) {
+    setIsLoading(false);
+    return;
+  }
+
   const timer = setTimeout(() => {
     const fetchPost = async () => {
       const blogPost = await getBlogPost(postId);
@@ -39,7 +59,9 @@ export default function EditBlogPage() {
   }, 500);
 
   return () => clearTimeout(timer);
-}, [postId]);
+}, [isLoggedIn, postId]);
+
+
 
 
   const handleBack = () => {
@@ -73,6 +95,40 @@ export default function EditBlogPage() {
       router.push('/biz/blog');
     }, 1000);
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
+        <div className="bg-white border-b">
+          <div className="mobile-container py-4">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="flex items-center space-x-1 text-gray-600"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>뒤로</span>
+              </Button>
+              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
+                꾸다 외상체크
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mobile-container py-8">
+          <div className="text-center py-16">
+            <p className="text-gray-600 text-lg">
+              글을 수정할 권한이 없습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -144,7 +200,7 @@ export default function EditBlogPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <HamburgerWithSidebar />
-      
+
       {/* Header */}
       <div className="bg-white border-b mb-6">
         <div className="mobile-container py-4">
@@ -164,6 +220,7 @@ export default function EditBlogPage() {
           </div>
         </div>
       </div>
+
 
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">
@@ -203,12 +260,13 @@ export default function EditBlogPage() {
         <div className="bg-white rounded-lg border border-gray-200">
           <RichTextEditor
             content={content}
-            
+
             onChange={setContent}
             placeholder="내용을 입력하세요..."
           />
         </div>
       </div>
+
 
       {/* Footer */}
       <div className="pb-8">

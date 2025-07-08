@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,12 +8,40 @@ import { Input } from '@/components/ui/input';
 import { createBlogPost } from '@/lib/blog-utils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
+import { getCurrentSession } from '@/lib/auth-utils';
+
+
 
 export default function CreateBlogPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 로그인 여부 확인
+  useEffect(() => {
+
+    const checkSession = async () => {
+      const session = await getCurrentSession();
+      setIsLoggedIn(!!session);
+    };
+
+    checkSession();
+  }, []);
+
+  useEffect(() => {
+    
+    if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
+
+    if (isLoggedIn) {
+      setIsLoading(false);
+      return;
+    } 
+
+
+  }, [isLoggedIn]);
 
   const handleBack = () => {
     router.push('/biz/blog');
@@ -36,26 +64,98 @@ export default function CreateBlogPage() {
 
     setIsSaving(true);
 
-    
-    try {
-    await createBlogPost({
-      title: title.trim(),
-      content: content
-    });
 
-    router.push('/biz/blog');
-  } catch (error) {
-    console.error('글 저장 실패:', error);
-    alert('글 저장 중 오류가 발생했습니다.');
-  } finally {
-    setIsSaving(false);
-  }
+    try {
+      await createBlogPost({
+        title: title.trim(),
+        content: content
+      });
+
+      router.push('/biz/blog');
+    } catch (error) {
+      console.error('글 저장 실패:', error);
+      alert('글 저장 중 오류가 발생했습니다.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
+
+
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
+        <div className="bg-white border-b">
+          <div className="mobile-container py-4">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="flex items-center space-x-1 text-gray-600"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>뒤로</span>
+              </Button>
+              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
+                꾸다 외상체크
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mobile-container py-8">
+          <div className="text-center py-16">
+            <p className="text-gray-600 text-lg">
+              글을 작성할 권한이 없습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <HamburgerWithSidebar />
+        <div className="bg-white border-b mb-20">
+          <div className="mobile-container py-4">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="flex items-center space-x-1 text-gray-600"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>뒤로</span>
+              </Button>
+              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
+                꾸다 외상체크
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">로딩중...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
+
+
     <div className="min-h-screen bg-gray-50">
       <HamburgerWithSidebar />
-      
+
       {/* Header */}
       <div className="bg-white border-b mb-6">
         <div className="mobile-container py-4">
@@ -75,6 +175,7 @@ export default function CreateBlogPage() {
           </div>
         </div>
       </div>
+
 
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">

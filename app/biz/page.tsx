@@ -22,6 +22,14 @@ export default function BizSearchPage() {
     //검색어 없을 경우 '검색하기' 버튼 비활성화
     if (!searchQuery.trim()) return;
 
+    //GTM 적용
+    window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'button_click',
+    button_id: 'biz_inquiry'
+  });
+
+
     setIsSearching(true);
     setShowResults(false);
     setNoResults(false);
@@ -110,6 +118,7 @@ export default function BizSearchPage() {
             onClick={handleSearch}
             disabled={isSearching || !searchQuery.trim()}
             className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base mb-6"
+             data-gtm-id="biz_inquiry"
           >
             {isSearching ? (
               <div className="flex items-center space-x-2">

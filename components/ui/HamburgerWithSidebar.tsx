@@ -101,8 +101,7 @@ export default function HamburgerWithSidebar() {
               홈
             </Link>
 
-            
-            {isLoggedIn ? (
+            {/* {isLoggedIn ? (
               
               <button
                 onClick={handleLogout}
@@ -127,8 +126,19 @@ export default function HamburgerWithSidebar() {
                   회원가입
                 </Link>
               </>
+            )} */}
+             {isLoggedIn && (
+              
+              <button
+                onClick={handleLogout}
+                className="block text-left w-full text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              >
+                로그아웃
+              </button>
+            
             )}
-
+ 
+            
             <Link 
               href="/biz/blog"
               className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"

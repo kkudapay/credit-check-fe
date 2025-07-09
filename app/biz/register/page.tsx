@@ -1,7 +1,7 @@
 //회원가입 페이지
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,8 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { register } from '@/lib/auth-utils';
 import { toast } from 'sonner';
 import KkudaHeader from "@/components/ui/KkudaHeader";
+import { getCurrentSession } from '@/lib/auth-utils';
+
 
 export default function registerPage() {
   const [formData, setFormData] = useState({
@@ -22,6 +24,7 @@ export default function registerPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
@@ -30,11 +33,35 @@ export default function registerPage() {
   }>({});
   const router = useRouter();
 
+  useEffect(() => {
+
+    const checkSession = async () => {
+      const session = await getCurrentSession();
+      setIsLoggedIn(!!session);
+    };
+
+    checkSession();
+  }, []);
+
+  useEffect(() => {
+
+    if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
+
+    if (isLoggedIn) {
+      setIsLoading(false);
+      return;
+    }
+
+
+  }, [isLoggedIn]);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
+
 
     // 에러 메시지 초기화
     if (errors[field as keyof typeof errors]) {
@@ -92,9 +119,9 @@ export default function registerPage() {
       return;
     }
     toast.success('회원가입이 완료되었습니다!', {
-  duration: 2000, 
-});
-  
+      duration: 2000,
+    });
+
     router.push('/biz/login');
   };
 
@@ -116,12 +143,47 @@ export default function registerPage() {
       formData.password === formData.confirmPassword;
   };
 
+
+  if (!isLoggedIn) {
+    return (
+      <div>
+        <HamburgerWithSidebar />
+        <KkudaHeader />
+
+        <div className="mobile-container py-8">
+          <div className="text-center py-16">
+            <p className="text-gray-600 text-lg">
+              회원가입 페이지에 접근할 권한이 없습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div>
+        <HamburgerWithSidebar />
+
+
+        <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">로딩중...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div >
       <HamburgerWithSidebar />
-<KkudaHeader/>
+      <KkudaHeader />
       <div className="min-h-screen  flex flex-col">
-        
+
 
         {/* Body */}
         <div className="mobile-container py-8 flex-1">

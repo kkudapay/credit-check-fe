@@ -113,17 +113,9 @@ export default function CreateBlogPage() {
     return (
       <div>
         <HamburgerWithSidebar />
-        <div className="bg-white border-b mb-20">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <div onClick={goHome} className="text-orange-500 text-xl font-bold mt-2 mb-2 cursor-pointer ">
-              꾸다 외상체크
-            </div>
-            </div>
-          </div>
-        </div>
+        
 
-        <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
+        <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
             <p className="text-gray-600">로딩중...</p>

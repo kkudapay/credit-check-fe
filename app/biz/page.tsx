@@ -144,7 +144,7 @@ export default function BizSearchPage() {
                   <div
                     key={company.businessNumber}
                     onClick={() => handleCompanySelect(company.businessNumber)}
-                    className="bg-white rounded-lg shadow-lg p-4 border border-gray-200 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                    className="bg-white rounded-lg shadow-lg p-4 border  cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                   >
                     <div className="space-y-2">
                       <h3 className="font-medium text-gray-900">{company.companyName}</h3>

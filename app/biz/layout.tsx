@@ -7,11 +7,9 @@ export const metadata = sharedMetadata;
 
 export default function BizLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
-      <body>
+    <>
         <Toaster position="top-center" richColors /> 
         {children}
-      </body>
-    </html>
+      </>
   );
 }

@@ -28,10 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${companyName} 사업자번호 연체내역 - 꾸다 외상체크`,
       description: `${companyName} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
-      url: `https://kkudacheck.kr/biz/${businessNumber}`,
+      url: `https://credit.kkuda.kr/biz/${businessNumber}`,
     },
     alternates: {
-      canonical: `https://kkudacheck.kr/biz/${businessNumber}`,
+      canonical: `https://credit.kkuda.kr/biz/${businessNumber}`,
     },
   };
 }

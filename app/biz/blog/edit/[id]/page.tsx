@@ -9,6 +9,7 @@ import { getBlogPost, updateBlogPost, type BlogPost } from '@/lib/blog-utils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
+import KkudaHeader from "@/components/ui/KkudaHeader";
 
 export default function EditBlogPage() {
   const params = useParams();
@@ -98,28 +99,11 @@ useEffect(() => {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
-        <div className="bg-white border-b">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-                꾸다 외상체크
-              </div>
-            </div>
-          </div>
-        </div>
+        <KkudaHeader/>
 
-        <div className="mobile-container py-8">
+        <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
           <div className="text-center py-16">
             <p className="text-gray-600 text-lg">
               글을 수정할 권한이 없습니다.
@@ -132,28 +116,11 @@ useEffect(() => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
-        <div className="bg-white border-b mb-20">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-                꾸다 외상체크
-              </div>
-            </div>
-          </div>
-        </div>
+        
 
-        <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
+        <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
             <p className="text-gray-600">글을 불러오는 중...</p>
@@ -165,26 +132,9 @@ useEffect(() => {
 
   if (notFound || !post) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
-        <div className="bg-white border-b">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-                꾸다 외상체크
-              </div>
-            </div>
-          </div>
-        </div>
+        <KkudaHeader/>
 
         <div className="mobile-container py-8">
           <div className="text-center py-16">
@@ -198,28 +148,10 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <HamburgerWithSidebar />
 
-      {/* Header */}
-      <div className="bg-white border-b mb-6">
-        <div className="mobile-container py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              className="flex items-center space-x-1 text-gray-600"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>뒤로</span>
-            </Button>
-            <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-              꾸다 외상체크
-            </div>
-          </div>
-        </div>
-      </div>
+      <KkudaHeader/>
 
 
       {/* Content */}

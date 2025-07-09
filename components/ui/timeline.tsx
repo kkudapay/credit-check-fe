@@ -21,7 +21,7 @@ const timelineData: TimelineItem[] = [
         date: "5월 25일",
       },
       {
-        amount: "450달러 이상",
+        amount: "450만원 이상",
         count: "11건", 
         date: "1월 11일",
       }
@@ -31,18 +31,18 @@ const timelineData: TimelineItem[] = [
     year: "2021년",
     milestones: [
       {
-        amount: "9,000달러의 이익",
+        amount: "9,000만원 이상",
         count: "555건",
         date: "11월 14일",
       },
       {
-        amount: "1,000달러 이상",
-        count: "9건",
+        amount: "1,000만원 이상",
+        count: "11111건",
         date: "7월 27일",
       },
       {
-        amount: "1,000달러 이상",
-        count: "9건",
+        amount: "1,000만원 이상",
+        count: "1111건",
         date: "1월 5일",
       }
     ]
@@ -54,42 +54,40 @@ export default function Timeline() {
   return (
     <div className="relative max-w-4xl mx-auto p-6">
       {/* Timeline line */}
-      <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-green-200"></div>
+      <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-black"></div>
       
       {timelineData.map((yearData, yearIndex) => (
         <div key={yearData.year} className="relative mb-12">
           {/* Year marker */}
           <div className="flex items-center mb-8">
-            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-white border-4 border-indigo-500 rounded-full shadow-lg">
-              <span className="text-sm font-bold text-indigo-600">{yearData.year.replace('년', '')}</span>
-            </div>
-            <div className="ml-6">
+            
+            <div className="ml-4">
               <h2 className="text-2xl font-bold text-gray-800">{yearData.year}</h2>
             </div>
           </div>
 
           {/* Milestones */}
-          <div className="ml-16 space-y-6">
+          <div className="ml-14 space-y-6">
             {yearData.milestones.map((milestone, milestoneIndex) => (
               <div
                 key={milestoneIndex}
-                className="relative bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                className="relative bg-white rounded-xl  border border-gray-200 p-4 "
               >
                 {/* Connector line */}
                 <div className="absolute -left-8 top-1/2 w-8 h-0.5 bg-gray-300"></div>
                 
                 {/* Milestone dot */}
-                <div className="absolute -left-12 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-500 border-blue-200 rounded-full border-4 border-white shadow-md flex items-center justify-center text-white">
+                <div className="absolute -left-12 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-orange-500  rounded-full shadow-md flex items-center justify-center text-white">
                 
                 </div>
 
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-gray-800">
+                      <h3 className=" whitespace-nowrap text-xl font-semibold text-gray-800">
                         {milestone.amount}
                       </h3>
-                      <span className="px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
+                      <span className="w-auto whitespace-nowrap px-2 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
                         {milestone.count}
                       </span>
                     </div>

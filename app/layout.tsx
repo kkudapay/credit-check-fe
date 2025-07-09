@@ -2,6 +2,7 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { sharedMetadata } from './shared-metadata';
+import GTMInitializer from '@/components/ui/GTMInitializer';
 
 // GTM을 위한 값 선언
 declare global {
@@ -15,12 +16,17 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = sharedMetadata;
 
+
+
+
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
+    
     <html lang="ko">
       <head>
         <script
@@ -43,7 +49,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}><GTMInitializer /> {children}</body>
     </html>
   );
 }

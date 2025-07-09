@@ -12,6 +12,9 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import Timeline from '@/components/ui/timeline';
 
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
+
+import TagManager from "react-gtm-module";
+
 //회사 상세 페이지 렌더링 함수
 export default function CompanyDetailPage() {
   const params = useParams();
@@ -26,37 +29,39 @@ export default function CompanyDetailPage() {
   //사용자 흐름에 따라 알맞은 요소를 화면에 렌더링함.
   //(리액트 컴포넌트가 렌더링될 때마다 반복 수행)
   useEffect(() => {
-  const timer = setTimeout(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getTotalData(businessNumber); // 🔧 await 추가
-        if (data) {
-          setCompanyData(data);
-          console.log(data);
-        } else {
+    const timer = setTimeout(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getTotalData(businessNumber); // 🔧 await 추가
+          if (data) {
+            setCompanyData(data);
+            console.log(data);
+          } else {
+            setNotFound(true);
+          }
+        } catch (error) {
+          console.error("getTotalData 오류:", error);
           setNotFound(true);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error("getTotalData 오류:", error);
-        setNotFound(true);
-      } finally {
-        setIsLoading(false);
-      }
+      };
+
+      fetchData();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [businessNumber]);
+
+  const handleClick_GTM = () => {
+    const tagManagerArgs = {
+      dataLayer: {
+        event: "button_click",
+        button_id: 'overdue_detail'
+      },
     };
-
-    fetchData();
-  }, 1000);
-
-  return () => clearTimeout(timer);
-}, [businessNumber]);
-
-const handleClick_GTM = () => {
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    event: 'button_click',
-    button_id: 'overdue_detail'
-  });
-};
+    TagManager.dataLayer(tagManagerArgs);
+  };
 
   //URL /biz로 이동하는 함수 (뒤로가기)
   const handleBack = () => {
@@ -174,7 +179,7 @@ const handleClick_GTM = () => {
             <div className="flex items-center mb-3">
               <h2 className="text-lg font-semibold text-gray-900 mr-2">연체 정보</h2>
               {companyData.overdueInfo.hasOverdue && (<button
-                onClick={() => {handleClick_GTM(); setShowGraph(!showGraph);}}
+                onClick={() => { handleClick_GTM(); setShowGraph(!showGraph); }}
                 className="text-gray-600 hover:text-gray-800"
                 data-gtm-id="overdue_detail"
               >

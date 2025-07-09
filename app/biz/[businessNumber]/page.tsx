@@ -92,15 +92,11 @@ export default function CompanyDetailPage() {
     return (
       <div className="min-h-screen ">
         <HamburgerWithSidebar />
-        <div className="bg-white border-b">
-          <div className="mobile-container py-4">
-            <KkudaHeader/>
-          </div>
-        </div>
+        <KkudaHeader/>
 
         <div className="mobile-container py-8">
           <div className="text-center py-16">
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 text-lg ">
               국세청에 등록되지 않은 사업자입니다
             </p>
           </div>

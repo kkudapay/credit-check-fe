@@ -85,9 +85,10 @@ export async function searchCompanies(input: string) {
 
 
 //사업자 및 연체정보 반환함수
-export async function getTotalData(bizNumber: string): Promise<BusinessData & OverdueData> {
+export async function getTotalData(bizNumber: string): Promise<(BusinessData & OverdueData) | null> {
 
-  if (bizNumber.length !== 10) {
+  try {
+          if (bizNumber.length !== 10) {
     throw new Error(`잘못된 사업자 정보가 입력됐습니다. ${bizNumber}`);
   }
 
@@ -105,6 +106,11 @@ export async function getTotalData(bizNumber: string): Promise<BusinessData & Ov
     ...businessData,
     ...overdueData,
   };
+        } catch (error) {
+          console.error("getTotalData 오류:", error);
+          return null;
+        }
+  
 }
 
 

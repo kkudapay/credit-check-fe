@@ -9,6 +9,7 @@ import { formatDate, isNewPost } from '@/lib/format-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import DOMPurify from 'dompurify';
 import { createClient } from '@/lib/supabaseClient';
+import KkudaHeader from "@/components/ui/KkudaHeader";
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -73,24 +74,7 @@ export default function BlogPage() {
     return (
       <div>
         <HamburgerWithSidebar />
-        <div className="bg-white border-b mb-20">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-                꾸다 외상체크
-              </div>
-            </div>
-          </div>
-        </div>
+        <KkudaHeader/>
 
         <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
           <div className="text-center">
@@ -106,25 +90,7 @@ export default function BlogPage() {
     <div>
       <HamburgerWithSidebar />
 
-      {/* Header */}
-      <div className="bg-white border-b mb-6">
-        <div className="mobile-container py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              className="flex items-center space-x-1 text-gray-600"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>뒤로</span>
-            </Button>
-            <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-              꾸다 외상체크
-            </div>
-          </div>
-        </div>
-      </div>
+      <KkudaHeader/>
 
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">

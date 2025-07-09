@@ -10,6 +10,7 @@ import Link from 'next/link';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { register } from '@/lib/auth-utils';
 import { toast } from 'sonner';
+import KkudaHeader from "@/components/ui/KkudaHeader";
 
 export default function registerPage() {
   const [formData, setFormData] = useState({
@@ -118,16 +119,9 @@ export default function registerPage() {
   return (
     <div >
       <HamburgerWithSidebar />
-
+<KkudaHeader/>
       <div className="min-h-screen  flex flex-col">
-        {/* Header */}
-        <div className="bg-white border-b mb-10">
-          <div className="mobile-container py-4 flex justify-between items-center">
-            <div onClick={handleGoHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-              꾸다 외상체크
-            </div>
-          </div>
-        </div>
+        
 
         {/* Body */}
         <div className="mobile-container py-8 flex-1">

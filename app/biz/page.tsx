@@ -10,6 +10,7 @@ import { formatBusinessNumber, searchCompanies, type CompanySearchResult } from 
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
 
+
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<CompanySearchResult[]>([]);
@@ -87,24 +88,17 @@ export default function BizSearchPage() {
       <HamburgerWithSidebar />
 
       <div className="min-h-screen flex flex-col">
-        {/* Header */}
-        <div className="bg-white border-b mb-10">
-          <div className="mobile-container py-4 flex justify-between items-center">
-            <div onClick={handleGoHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
-              꾸다 외상체크
-            </div>
-          </div>
-        </div>
+        
 
 
         {/* Body */}
         <div className="mobile-container py-8 flex-1">
           <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-              사업자번호 연체정보 조회
+            <h1 className="text-orange-500 text-5xl font-bold text-gray-900 text-center mt-60 select-none cursor-pointer">
+              꾸다 외상체크
             </h1>
 
-            <div className="flex flex-col md:flex-row items-stretch items-center md:items-end gap-2 mb-6">
+            <div className="flex flex-col md:flex-row items-stretch items-center md:items-end gap-2 mb-6 mt-10">
               <div className="relative flex-grow mb-3">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <Input
@@ -150,7 +144,7 @@ export default function BizSearchPage() {
                   <div
                     key={company.businessNumber}
                     onClick={() => handleCompanySelect(company.businessNumber)}
-                    className="bg-white rounded-lg p-4 border border-gray-200 cursor-pointer hover:border-orange-300 transition-colors"
+                    className="bg-white rounded-lg shadow-lg p-4 border border-gray-200 cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                   >
                     <div className="space-y-2">
                       <h3 className="font-medium text-gray-900">{company.companyName}</h3>

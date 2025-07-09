@@ -9,6 +9,7 @@ import { createBlogPost } from '@/lib/blog-utils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
+import KkudaHeader from "@/components/ui/KkudaHeader";
 
 
 
@@ -90,18 +91,9 @@ export default function CreateBlogPage() {
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
             <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-                꾸다 외상체크
-              </div>
+              <div onClick={goHome} className="text-orange-500 text-xl font-bold mt-2 mb-2 cursor-pointer ">
+              꾸다 외상체크
+            </div>
             </div>
           </div>
         </div>
@@ -124,18 +116,9 @@ export default function CreateBlogPage() {
         <div className="bg-white border-b mb-20">
           <div className="mobile-container py-4">
             <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-                꾸다 외상체크
-              </div>
+              <div onClick={goHome} className="text-orange-500 text-xl font-bold mt-2 mb-2 cursor-pointer ">
+              꾸다 외상체크
+            </div>
             </div>
           </div>
         </div>
@@ -156,25 +139,7 @@ export default function CreateBlogPage() {
     <div>
       <HamburgerWithSidebar />
 
-      {/* Header */}
-      <div className="bg-white border-b mb-6">
-        <div className="mobile-container py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              className="flex items-center space-x-1 text-gray-600"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>뒤로</span>
-            </Button>
-            <div onClick={goHome} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer">
-              꾸다 외상체크
-            </div>
-          </div>
-        </div>
-      </div>
+      <KkudaHeader/>
 
 
       {/* Content */}

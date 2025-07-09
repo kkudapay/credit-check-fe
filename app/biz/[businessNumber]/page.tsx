@@ -14,6 +14,7 @@ import Timeline from '@/components/ui/timeline';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 
 import TagManager from "react-gtm-module";
+import KkudaHeader from "@/components/ui/KkudaHeader";
 
 //회사 상세 페이지 렌더링 함수
 export default function CompanyDetailPage() {
@@ -73,27 +74,9 @@ export default function CompanyDetailPage() {
     return (
       <div className="min-h-screen ">
         <HamburgerWithSidebar />
-        {/* Header */}
-        <div className="bg-white border-b mb-20">
-          <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
-                꾸다 외상체크
-              </div>
-            </div>
-          </div>
-        </div>
+        
 
-        <div className="flex items-center justify-center min-h-[calc(100vh/2)]">
+        <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
             <p className="text-gray-600">정보를 불러오는 중...</p>
@@ -111,20 +94,7 @@ export default function CompanyDetailPage() {
         <HamburgerWithSidebar />
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="flex items-center space-x-1 text-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>뒤로</span>
-              </Button>
-              <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
-                꾸다 외상체크
-              </div>
-            </div>
+            <KkudaHeader/>
           </div>
         </div>
 
@@ -145,24 +115,9 @@ export default function CompanyDetailPage() {
     <div className="min-h-screen ">
       <HamburgerWithSidebar />
       {/* Header */}
-      <div className="bg-white border-b mb-6">
-        <div className="mobile-container py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              className="flex items-center space-x-1 text-gray-600"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>뒤로</span>
-            </Button>
-            <div onClick={handleBack} className="bg-orange-500 text-white px-3 py-2 rounded text-base font-medium mt-2 mb-2 cursor-pointer ">
-              꾸다 외상체크
-            </div>
-          </div>
-        </div>
-      </div>
+      
+          <KkudaHeader/>
+        
 
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">

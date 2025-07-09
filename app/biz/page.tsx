@@ -99,40 +99,43 @@ export default function BizSearchPage() {
 
         {/* Body */}
         <div className="mobile-container py-8 flex-1">
-          <div className="max-w-md mx-auto">
+          <div className="max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
               사업자번호 연체정보 조회
             </h1>
 
-            <div className="relative mb-6">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                type="text"
-                placeholder="사업자번호 또는 상호명을 입력하세요"
-                value={searchQuery}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-                className="pl-12 h-14 text-base border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-0"
-                disabled={isSearching}
-              />
+            <div className="flex flex-col md:flex-row items-stretch items-center md:items-end gap-2 mb-6">
+              <div className="relative flex-grow mb-3">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Input
+                  type="text"
+                  placeholder="사업자번호 또는 상호명을 입력하세요"
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                  onKeyPress={handleKeyPress}
+                  className="pl-11 h-16 text-lg border-2 border-gray-200 rounded-xl "
+                  disabled={isSearching}
+                />
+              </div>
+
+
+
+              <Button
+                onClick={handleSearch}
+                disabled={isSearching || !searchQuery.trim()}
+                className="flex-shrink-0 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base mb-4"
+                data-gtm-id="biz_inquiry"
+              >
+                {isSearching ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>검색중...</span>
+                  </div>
+                ) : (
+                  '검색하기'
+                )}
+              </Button>
             </div>
-
-            <Button
-              onClick={handleSearch}
-              disabled={isSearching || !searchQuery.trim()}
-              className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base mb-6"
-              data-gtm-id="biz_inquiry"
-            >
-              {isSearching ? (
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>검색중...</span>
-                </div>
-              ) : (
-                '검색하기'
-              )}
-            </Button>
-
 
 
             {!isSearching && noResults && (

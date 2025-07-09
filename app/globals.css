@@ -39,7 +39,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 18 89% 60%;
+    /*--ring: 18 89% 60%;*/
     --radius: 0.75rem;
   }
 }
@@ -105,6 +105,7 @@
   max-width: none;
   margin: 0 auto;
   padding: 0 16px;
+  
 }
 
 @media (min-width: 768px) {
@@ -162,3 +163,4 @@
 html {
   overflow-y: scroll;
 }
+

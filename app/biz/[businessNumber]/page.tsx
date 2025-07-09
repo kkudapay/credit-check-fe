@@ -90,12 +90,12 @@ export default function CompanyDetailPage() {
   //알맞은 회사 정보가 없을 경우
   if (notFound || !companyData) {
     return (
-      <div className="min-h-screen ">
+      <div >
         <HamburgerWithSidebar />
         <KkudaHeader/>
 
-        <div className="mobile-container py-8">
-          <div className="text-center py-16">
+        <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
+          <div className="text-center">
             <p className="text-gray-600 text-lg ">
               국세청에 등록되지 않은 사업자입니다
             </p>

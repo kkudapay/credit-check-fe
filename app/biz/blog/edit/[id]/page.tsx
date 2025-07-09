@@ -103,7 +103,7 @@ useEffect(() => {
         <HamburgerWithSidebar />
         <KkudaHeader/>
 
-        <div className="mobile-container py-8">
+        <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
           <div className="text-center py-16">
             <p className="text-gray-600 text-lg">
               글을 수정할 권한이 없습니다.

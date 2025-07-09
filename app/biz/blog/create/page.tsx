@@ -98,7 +98,7 @@ export default function CreateBlogPage() {
           </div>
         </div>
 
-        <div className="mobile-container py-8">
+        <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
           <div className="text-center py-16">
             <p className="text-gray-600 text-lg">
               글을 작성할 권한이 없습니다.

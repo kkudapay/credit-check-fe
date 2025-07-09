@@ -83,10 +83,10 @@ export default function BizSearchPage() {
 
   return (
 
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <HamburgerWithSidebar />
 
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen flex flex-col">
         {/* Header */}
         <div className="bg-white border-b mb-10">
           <div className="mobile-container py-4 flex justify-between items-center">
@@ -123,7 +123,7 @@ export default function BizSearchPage() {
               <Button
                 onClick={handleSearch}
                 disabled={isSearching || !searchQuery.trim()}
-                className="flex-shrink-0 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base mb-4"
+                className="flex-shrink-0 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium text-base mb-4 min-w-[128px]"
                 data-gtm-id="biz_inquiry"
               >
                 {isSearching ? (
@@ -132,7 +132,7 @@ export default function BizSearchPage() {
                     <span>검색중...</span>
                   </div>
                 ) : (
-                  '검색하기'
+                  '검색'
                 )}
               </Button>
             </div>

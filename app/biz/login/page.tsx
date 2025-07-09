@@ -87,10 +87,10 @@ export default function LoginPage() {
   
   return (
     
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <HamburgerWithSidebar />
       
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen flex flex-col">
         {/* Header */}
         <div className="bg-white border-b mb-10">
           <div className="mobile-container py-4 flex justify-between items-center">

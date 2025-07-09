@@ -98,7 +98,7 @@ useEffect(() => {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
@@ -132,7 +132,7 @@ useEffect(() => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
         <div className="bg-white border-b mb-20">
           <div className="mobile-container py-4">
@@ -165,7 +165,7 @@ useEffect(() => {
 
   if (notFound || !post) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
@@ -198,7 +198,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <HamburgerWithSidebar />
 
       {/* Header */}

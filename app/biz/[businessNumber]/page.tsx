@@ -71,7 +71,7 @@ export default function CompanyDetailPage() {
   //로딩중 화면
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen ">
         <HamburgerWithSidebar />
         {/* Header */}
         <div className="bg-white border-b mb-20">
@@ -107,7 +107,7 @@ export default function CompanyDetailPage() {
   //알맞은 회사 정보가 없을 경우
   if (notFound || !companyData) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen ">
         <HamburgerWithSidebar />
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
@@ -142,7 +142,7 @@ export default function CompanyDetailPage() {
 
   //해당하는 회사 정보가 있을 경우
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       <HamburgerWithSidebar />
       {/* Header */}
       <div className="bg-white border-b mb-6">

@@ -71,7 +71,7 @@ export default function BlogPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div>
         <HamburgerWithSidebar />
         <div className="bg-white border-b mb-20">
           <div className="mobile-container py-4">
@@ -103,7 +103,7 @@ export default function BlogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <HamburgerWithSidebar />
 
       {/* Header */}

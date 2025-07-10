@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getTotalData, formatBusinessNumber, type BusinessData, type OverdueData } from '@/lib/business-utils';
+import { getTotalData, formatBusinessNumber, getOverdueData, type BusinessData, type OverdueData, getBusinessData } from '@/lib/business-utils';
 import { formatCurrency, calculateDaysAgo, format_date } from '@/lib/format-utils';
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
@@ -15,6 +15,21 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 
 import TagManager from "react-gtm-module";
 import KkudaHeader from "@/components/ui/KkudaHeader";
+
+type BusinessInfo = {
+  businessNumber: string;
+  taxpayerStatus?: string;
+  taxType?: string;
+  corporateNumber?: string;
+  businessType?: string;
+  companyName?: string;
+  address?: string;
+  closureDate?: string;
+};
+
+type SearchCache = {
+  [keyword: string]: BusinessInfo[];
+};
 
 //회사 상세 페이지 렌더링 함수
 export default function CompanyDetailPage() {
@@ -31,12 +46,59 @@ export default function CompanyDetailPage() {
   //(리액트 컴포넌트가 렌더링될 때마다 반복 수행)
   useEffect(() => {
     const timer = setTimeout(() => {
+
+      const searchTerm = window.sessionStorage.getItem('biz_search_current_term');
+      const raw = window.sessionStorage.getItem('biz_search_map');
+      const cache: SearchCache = raw ? JSON.parse(raw) : {};
+
+
+
+
+      //sessionStorage에 사업자 정보 있을 경우
+      if (searchTerm && cache[searchTerm]) {
+
+        const match_biz_data = cache[searchTerm].find((item) => item.businessNumber.replace(/-/g, '') === businessNumber);
+        if (match_biz_data) {
+
+
+          //연체정보 조회 (현재는 더미데이터)
+          const fetchData = async () => {
+            try {
+              const overdue_data = await getOverdueData(businessNumber);
+
+              if (overdue_data) {
+
+                setCompanyData({
+                  ...match_biz_data,
+                  ...overdue_data,
+                });
+                console.log("상세페이지 SessionStorage 사용");
+              } else {
+                setNotFound(true);
+              }
+            } catch (error) {
+              console.error("캐시사용, 연체정보 조회 오류:", error);
+              setNotFound(true);
+            } finally {
+              setIsLoading(false);
+            }
+          };
+
+          fetchData();
+          return () => clearTimeout(timer);
+        } else {
+          console.log("일치하는 값 없음");
+        }
+      }
+
+      //sessionStorage에 사업자 정보 없을 경우
       const fetchData = async () => {
         try {
+          console.log("상세페이지 api 호출");
           const data = await getTotalData(businessNumber); // 🔧 await 추가
           if (data) {
             setCompanyData(data);
-            console.log(data);
+
           } else {
             setNotFound(true);
           }
@@ -49,7 +111,7 @@ export default function CompanyDetailPage() {
       };
 
       fetchData();
-    }, 1000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [businessNumber]);
@@ -74,7 +136,7 @@ export default function CompanyDetailPage() {
     return (
       <div className="min-h-screen ">
         <HamburgerWithSidebar />
-        
+
 
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -92,7 +154,7 @@ export default function CompanyDetailPage() {
     return (
       <div >
         <HamburgerWithSidebar />
-        <KkudaHeader/>
+        <KkudaHeader />
 
         <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
           <div className="text-center">
@@ -111,9 +173,9 @@ export default function CompanyDetailPage() {
     <div className="min-h-screen ">
       <HamburgerWithSidebar />
       {/* Header */}
-      
-          <KkudaHeader/>
-        
+
+      <KkudaHeader />
+
 
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">

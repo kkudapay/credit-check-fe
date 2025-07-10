@@ -10,12 +10,13 @@ export function formatBusinessNumber(input: string): string {
   return input;
 }
 
-
+/*
 export interface CompanySearchResult {
   businessNumber: string;
   companyName: string;
   address?: string;
 }
+  */
 
 
 export interface BusinessData {
@@ -70,10 +71,15 @@ export async function searchCompanies(input: string) {
 
 
 
-    const mappedResults: CompanySearchResult[] = rawCompanies.map((item: any) => ({
-      businessNumber: item.bno,
-      companyName: item.name,
-      address: item.address ?? '', // 주소 없으면 빈 문자열 또는 undefined
+    const mappedResults: BusinessData[] = rawCompanies.map((item: any) => ({
+      businessNumber: item.bno ?? "",
+      taxpayerStatus: item.b_stt ?? "",
+      taxType: item.tax_type ?? "",
+      corporateNumber: item.cno ?? "",
+      businessType: item.companyTpye ?? "", // 오타 주의
+      companyName: item.name ?? "",
+      address: item.address ?? "",
+      closureDate: item.EndDt ?? ""
     }));
 
     return mappedResults;

@@ -6,19 +6,34 @@ import { Search, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { formatBusinessNumber, searchCompanies, type CompanySearchResult } from '@/lib/business-utils';
+import { formatBusinessNumber, searchCompanies, type BusinessData } from '@/lib/business-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
 
 
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<CompanySearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<BusinessData[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+
+  
+
+    const savedTerm = window.sessionStorage.getItem('biz_search_current_term');
+    const raw = window.sessionStorage.getItem('biz_search_map');
+    const cache = raw ? JSON.parse(raw) : {};
+    
+
+    if (savedTerm && cache[savedTerm]) {
+      setSearchQuery(savedTerm);
+      setSearchResults(cache[savedTerm]);
+  
+    }
+  }, []);
 
   //검색 처리 함수
   const handleSearch = async () => {
@@ -34,18 +49,31 @@ export default function BizSearchPage() {
     };
     TagManager.dataLayer(tagManagerArgs);
 
-    setIsSearching(true);
-    setShowResults(false);
-    setNoResults(false);
+    
+    const raw = window.sessionStorage.getItem('biz_search_map');
+    const cache = raw ? JSON.parse(raw) : {};
 
-
+    
+  if (cache[searchQuery]) {
+    console.log("검색페이지, 캐시 사용");
+    setSearchResults(cache[searchQuery]);
+    setShowResults(true);
+      setNoResults(cache[searchQuery].length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
+      setIsSearching(false);
+  } else {
+    console.log("검색페이지, API 호출");
     setTimeout(async () => {
+      setIsSearching(true);
       const results = await searchCompanies(searchQuery); //검색어에 해당하는 사업자 배열 반환받음
       setSearchResults(results);
       setShowResults(true);
       setNoResults(results.length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
       setIsSearching(false);
+      cache[searchQuery] = results;
+    window.sessionStorage.setItem('biz_search_map', JSON.stringify(cache));
     }, 800);
+  }
+    sessionStorage.setItem('biz_search_current_term', searchQuery);
   };
 
 
@@ -62,8 +90,11 @@ export default function BizSearchPage() {
   };
 
   const handleGoHome = () => {
-    console.log('Clicked!');
-    router.push('/biz');
+    setSearchQuery('');
+    setSearchResults([]);
+      setShowResults(false);
+      setNoResults(false); 
+      setIsSearching(false);
 
   };
 
@@ -94,22 +125,34 @@ export default function BizSearchPage() {
         {/* Body */}
         <div className="mobile-container py-8 flex-1">
           <div className="max-w-2xl mx-auto">
-            <h1 className="text-orange-500 text-5xl font-bold text-gray-900 text-center mt-60 select-none cursor-pointer">
+            <h1 onClick={handleGoHome} className="text-orange-500 text-5xl font-bold text-gray-900 text-center mt-60 select-none cursor-pointer">
               꾸다 외상체크
             </h1>
 
             <div className="flex flex-col md:flex-row items-stretch items-center md:items-end gap-2 mb-6 mt-10">
               <div className="relative flex-grow mb-3">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
+                {searchQuery ? (<Input
                   type="text"
+                  
+                  placeholder={searchQuery}
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                  onKeyPress={handleKeyPress}
+                  className="pl-11 h-16 text-lg border-2 border-gray-200 rounded-xl "
+                  disabled={isSearching}
+                />):(<Input
+                  type="text"
+                  
                   placeholder="사업자번호 또는 상호명을 입력하세요"
                   value={searchQuery}
                   onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
                   className="pl-11 h-16 text-lg border-2 border-gray-200 rounded-xl "
                   disabled={isSearching}
-                />
+                />)}
+                
+                
               </div>
 
 
@@ -148,7 +191,7 @@ export default function BizSearchPage() {
                   >
                     <div className="space-y-2">
                       <h3 className="font-medium text-gray-900">{company.companyName}</h3>
-                      <p className="text-sm text-gray-600">{company.businessNumber}</p>
+                      <p className="text-sm text-gray-600">{formatBusinessNumber(company.businessNumber)}</p>
                       {company.address && (
                         <p className="text-sm text-gray-500">{company.address}</p>
                       )}

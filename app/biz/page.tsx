@@ -39,13 +39,13 @@ export default function BizSearchPage() {
 
     
   if (cache[searchQuery]) {
-    // 이미 있는 경우 → 캐시 사용
+    console.log("검색페이지, 캐시 사용");
     setSearchResults(cache[searchQuery]);
     setShowResults(true);
       setNoResults(cache[searchQuery].length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
       setIsSearching(false);
   } else {
-    // API 호출 → 캐시에 저장
+    console.log("검색페이지, API 호출");
     setTimeout(async () => {
       const results = await searchCompanies(searchQuery); //검색어에 해당하는 사업자 배열 반환받음
       setSearchResults(results);
@@ -55,10 +55,8 @@ export default function BizSearchPage() {
       cache[searchQuery] = results;
     window.sessionStorage.setItem('biz_search_map', JSON.stringify(cache));
     }, 800);
-
-    
   }
-    
+    sessionStorage.setItem('biz_search_current_term', searchQuery);
   };
 
 

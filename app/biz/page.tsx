@@ -6,14 +6,14 @@ import { Search, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import { formatBusinessNumber, searchCompanies, type CompanySearchResult } from '@/lib/business-utils';
+import { formatBusinessNumber, searchCompanies, type BusinessData } from '@/lib/business-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
 
 
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<CompanySearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<BusinessData[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [noResults, setNoResults] = useState(false);

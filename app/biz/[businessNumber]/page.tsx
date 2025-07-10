@@ -47,7 +47,7 @@ export default function CompanyDetailPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
 
-      const searchTerm = sessionStorage.getItem('biz_search_current_term');
+      const searchTerm = window.sessionStorage.getItem('biz_search_current_term');
       const raw = window.sessionStorage.getItem('biz_search_map');
       const cache: SearchCache = raw ? JSON.parse(raw) : {};
 

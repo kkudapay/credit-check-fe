@@ -34,18 +34,31 @@ export default function BizSearchPage() {
     };
     TagManager.dataLayer(tagManagerArgs);
 
-    setIsSearching(true);
-    setShowResults(false);
-    setNoResults(false);
+    const raw = window.sessionStorage.getItem('biz_search_map');
+    const cache = raw ? JSON.parse(raw) : {};
 
-
+    
+  if (cache[searchQuery]) {
+    // 이미 있는 경우 → 캐시 사용
+    setSearchResults(cache[searchQuery]);
+    setShowResults(true);
+      setNoResults(cache[searchQuery].length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
+      setIsSearching(false);
+  } else {
+    // API 호출 → 캐시에 저장
     setTimeout(async () => {
       const results = await searchCompanies(searchQuery); //검색어에 해당하는 사업자 배열 반환받음
       setSearchResults(results);
       setShowResults(true);
       setNoResults(results.length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
       setIsSearching(false);
+      cache[searchQuery] = results;
+    window.sessionStorage.setItem('biz_search_map', JSON.stringify(cache));
     }, 800);
+
+    
+  }
+    
   };
 
 

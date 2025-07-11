@@ -10,6 +10,7 @@ import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 
 
@@ -33,13 +34,13 @@ export default function CreateBlogPage() {
   }, []);
 
   useEffect(() => {
-    
+
     if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
 
     if (isLoggedIn) {
       setIsLoading(false);
       return;
-    } 
+    }
 
 
   }, [isLoggedIn]);
@@ -88,12 +89,14 @@ export default function CreateBlogPage() {
     return (
       <div>
         <HamburgerWithSidebar />
+        <div className="min-h-screen ">
+          
         <div className="bg-white border-b">
           <div className="mobile-container py-4">
             <div className="flex items-center justify-between">
               <div onClick={goHome} className="text-orange-500 text-xl font-bold mt-2 mb-2 cursor-pointer ">
-              꾸다 외상체크
-            </div>
+                꾸다 외상체크
+              </div>
             </div>
           </div>
         </div>
@@ -105,6 +108,8 @@ export default function CreateBlogPage() {
             </p>
           </div>
         </div>
+        </div>
+        <KkudaFooter/>
       </div>
     );
   }
@@ -113,7 +118,7 @@ export default function CreateBlogPage() {
     return (
       <div>
         <HamburgerWithSidebar />
-        
+
 
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -130,8 +135,8 @@ export default function CreateBlogPage() {
 
     <div>
       <HamburgerWithSidebar />
-
-      <KkudaHeader/>
+<div className="min-h-screen ">
+      <KkudaHeader />
 
 
       {/* Content */}
@@ -177,11 +182,8 @@ export default function CreateBlogPage() {
           />
         </div>
       </div>
-
-      {/* Footer */}
-      <div className="pb-8">
-        <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
-      </div>
+</div>
+      <KkudaFooter/>
     </div>
   );
 }

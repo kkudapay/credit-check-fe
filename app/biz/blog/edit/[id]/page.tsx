@@ -10,6 +10,7 @@ import RichTextEditor from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 export default function EditBlogPage() {
   const params = useParams();
@@ -26,41 +27,41 @@ export default function EditBlogPage() {
   const postId = Number(params.id);
 
   // 로그인 여부 확인
-useEffect(() => {
-  const checkSession = async () => {
-    const session = await getCurrentSession();
-    setIsLoggedIn(!!session); // true 또는 false로 설정됨
-  };
-
-  checkSession();
-}, []);
-
-useEffect(() => {
-  if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
-
-  if (!isLoggedIn) {
-    setIsLoading(false);
-    return;
-  }
-
-  const timer = setTimeout(() => {
-    const fetchPost = async () => {
-      const blogPost = await getBlogPost(postId);
-      if (blogPost) {
-        setPost(blogPost);
-        setTitle(blogPost.title);
-        setContent(blogPost.content);
-      } else {
-        setNotFound(true);
-      }
-      setIsLoading(false);
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getCurrentSession();
+      setIsLoggedIn(!!session); // true 또는 false로 설정됨
     };
 
-    fetchPost();
-  }, 500);
+    checkSession();
+  }, []);
 
-  return () => clearTimeout(timer);
-}, [isLoggedIn, postId]);
+  useEffect(() => {
+    if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
+
+    if (!isLoggedIn) {
+      setIsLoading(false);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const fetchPost = async () => {
+        const blogPost = await getBlogPost(postId);
+        if (blogPost) {
+          setPost(blogPost);
+          setTitle(blogPost.title);
+          setContent(blogPost.content);
+        } else {
+          setNotFound(true);
+        }
+        setIsLoading(false);
+      };
+
+      fetchPost();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [isLoggedIn, postId]);
 
 
 
@@ -101,7 +102,8 @@ useEffect(() => {
     return (
       <div>
         <HamburgerWithSidebar />
-        <KkudaHeader/>
+        <div className="min-h-screen ">
+        <KkudaHeader />
 
         <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
           <div className="text-center py-16">
@@ -110,6 +112,8 @@ useEffect(() => {
             </p>
           </div>
         </div>
+        </div>
+        <KkudaFooter/>
       </div>
     );
   }
@@ -118,7 +122,7 @@ useEffect(() => {
     return (
       <div>
         <HamburgerWithSidebar />
-        
+
 
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -134,7 +138,8 @@ useEffect(() => {
     return (
       <div>
         <HamburgerWithSidebar />
-        <KkudaHeader/>
+        <div className="min-h-screen ">
+        <KkudaHeader />
 
         <div className="mobile-container py-8">
           <div className="text-center py-16">
@@ -143,6 +148,8 @@ useEffect(() => {
             </p>
           </div>
         </div>
+        </div>
+        <KkudaFooter/>
       </div>
     );
   }
@@ -150,8 +157,8 @@ useEffect(() => {
   return (
     <div>
       <HamburgerWithSidebar />
-
-      <KkudaHeader/>
+<div className="min-h-screen ">
+      <KkudaHeader />
 
 
       {/* Content */}
@@ -198,12 +205,9 @@ useEffect(() => {
           />
         </div>
       </div>
+</div>
 
-
-      {/* Footer */}
-      <div className="pb-8">
-        <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
-      </div>
+      <KkudaFooter/>
     </div>
   );
 }

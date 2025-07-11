@@ -4,7 +4,7 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://kkudacheck.kr/biz',
+      url: 'https://credit.kkuda.kr/biz',
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,

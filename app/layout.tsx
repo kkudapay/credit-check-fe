@@ -48,6 +48,7 @@ export default function RootLayout({
             })
           }}
         />
+        <meta name="google-site-verification" content="tZl4zpaDfoMQLHloR4n4J-QWKYzF9ip8YWp1OrB8LtI" />
       </head>
       <body className={inter.className}><GTMInitializer /> {children}</body>
     </html>

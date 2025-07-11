@@ -10,6 +10,7 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import DOMPurify from 'dompurify';
 import { createClient } from '@/lib/supabaseClient';
 import KkudaHeader from "@/components/ui/KkudaHeader";
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -74,7 +75,7 @@ export default function BlogPage() {
     return (
       <div>
         <HamburgerWithSidebar />
-        
+
 
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -89,8 +90,8 @@ export default function BlogPage() {
   return (
     <div>
       <HamburgerWithSidebar />
-
-      <KkudaHeader/>
+<div className="min-h-screen ">
+      <KkudaHeader />
 
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">
@@ -111,6 +112,7 @@ export default function BlogPage() {
         {/* Blog Posts */}
         <div className="space-y-4">
           {posts.length === 0 ? (
+             <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
             <div className="text-center py-16">
               <p className="text-gray-600 text-lg mb-4">아직 작성된 글이 없습니다.</p>
               {isAdmin && (
@@ -121,6 +123,7 @@ export default function BlogPage() {
                   첫 번째 글 작성하기
                 </Button>
               )}
+            </div>
             </div>
           ) : (
             posts.map((post) => (
@@ -198,11 +201,8 @@ export default function BlogPage() {
           )}
         </div>
       </div>
-
-      {/* Footer */}
-      <div className="pb-8">
-        <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
-      </div>
+</div>
+      <KkudaFooter/>
     </div>
   );
 }

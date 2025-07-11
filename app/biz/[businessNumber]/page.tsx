@@ -15,6 +15,7 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 
 import TagManager from "react-gtm-module";
 import KkudaHeader from "@/components/ui/KkudaHeader";
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 type BusinessInfo = {
   businessNumber: string;
@@ -154,6 +155,7 @@ export default function CompanyDetailPage() {
     return (
       <div >
         <HamburgerWithSidebar />
+        <div className="min-h-screen">
         <KkudaHeader />
 
         <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
@@ -163,6 +165,8 @@ export default function CompanyDetailPage() {
             </p>
           </div>
         </div>
+        </div>
+        <KkudaFooter />
       </div>
     );
   }
@@ -170,9 +174,10 @@ export default function CompanyDetailPage() {
 
   //해당하는 회사 정보가 있을 경우
   return (
-    <div className="min-h-screen ">
+    <div>
+      
       <HamburgerWithSidebar />
-      {/* Header */}
+      <div className="min-h-screen ">
 
       <KkudaHeader />
 
@@ -191,7 +196,7 @@ export default function CompanyDetailPage() {
           <div>
             <div className="flex items-center mb-3">
               <h2 className="text-lg font-semibold text-gray-900 mr-2">연체 정보</h2>
-              
+
               {companyData.overdueInfo.hasOverdue && (<button
                 onClick={() => { handleClick_GTM(); setShowGraph(!showGraph); }}
                 className="text-gray-600 hover:text-gray-800"
@@ -205,74 +210,74 @@ export default function CompanyDetailPage() {
 
 
             <div className="relative ">
-<div className="relative border-gray-100 blur-sm select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                {/*연체 유무*/}
-                <span className="text-gray-700">연체 유무</span>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${companyData.overdueInfo.hasOverdue
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-green-100 text-green-800'
-                  }`}>
-                  {companyData.overdueInfo.hasOverdue ? '연체 있음' : '연체 없음'}
-                </span>
+              <div className="relative border-gray-100 blur-sm select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  {/*연체 유무*/}
+                  <span className="text-gray-700">연체 유무</span>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${companyData.overdueInfo.hasOverdue
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-green-100 text-green-800'
+                    }`}>
+                    {companyData.overdueInfo.hasOverdue ? '연체 있음' : '연체 없음'}
+                  </span>
+                </div>
+                {/*상세 연체 정보*/}
+
+                <div className="space-y-3 pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">연체 금액</span>
+                    <span className="font-semibold text-red-600">
+                      {companyData.overdueInfo.hasOverdue
+                        ? `${formatCurrency(companyData.overdueInfo.totalAmount)} 이상`
+                        : '-'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">연체 건수</span>
+                    <span className="font-semibold">
+                      {companyData.overdueInfo.hasOverdue
+                        ? `${companyData.overdueInfo.overdueCount}건`
+                        : '-'}
+                    </span>
+                  </div>
+
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">마지막 연체건 경과일</span>
+                    <span className="font-semibold">
+                      {companyData.overdueInfo.hasOverdue &&
+                        companyData.overdueInfo.lastOverdueDate
+                        ? `${calculateDaysAgo(companyData.overdueInfo.lastOverdueDate)}일`
+                        : '-'}
+                    </span>
+                  </div>
+
+
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">처음 연체건 경과일</span>
+                    <span className="font-semibold">
+                      {companyData.overdueInfo.hasOverdue &&
+                        companyData.overdueInfo.firstOverdueDate
+                        ? `${calculateDaysAgo(companyData.overdueInfo.firstOverdueDate)}일`
+                        : '-'}
+                    </span>
+                  </div>
+
+
+
+                </div>
+
+
               </div>
-              {/*상세 연체 정보*/}
-
-              <div className="space-y-3 pt-3 border-t border-gray-100">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">연체 금액</span>
-                  <span className="font-semibold text-red-600">
-                    {companyData.overdueInfo.hasOverdue
-                      ? `${formatCurrency(companyData.overdueInfo.totalAmount)} 이상`
-                      : '-'}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">연체 건수</span>
-                  <span className="font-semibold">
-                    {companyData.overdueInfo.hasOverdue
-                      ? `${companyData.overdueInfo.overdueCount}건`
-                      : '-'}
-                  </span>
-                </div>
 
 
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">마지막 연체건 경과일</span>
-                  <span className="font-semibold">
-                    {companyData.overdueInfo.hasOverdue &&
-                      companyData.overdueInfo.lastOverdueDate
-                      ? `${calculateDaysAgo(companyData.overdueInfo.lastOverdueDate)}일`
-                      : '-'}
-                  </span>
-                </div>
-
-
-
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">처음 연체건 경과일</span>
-                  <span className="font-semibold">
-                    {companyData.overdueInfo.hasOverdue &&
-                      companyData.overdueInfo.firstOverdueDate
-                      ? `${calculateDaysAgo(companyData.overdueInfo.firstOverdueDate)}일`
-                      : '-'}
-                  </span>
-                </div>
-
-
-
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <h2 className="text-lg font-semibold text-red-600 text-center">연체정보 조회 서비스는 곧 오픈됩니다.
+                </h2>
               </div>
-
-
-</div>
-            
-
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h2 className="text-lg font-semibold text-red-600 text-center">연체정보 조회 서비스는 곧 오픈됩니다.
-              </h2>
             </div>
-</div>
           </div>
 
           {/* 사업자 정보 */}
@@ -348,11 +353,8 @@ export default function CompanyDetailPage() {
         )}
       </div>
 
-
-      {/* Footer indicator */}
-      <div className="pb-8">
-        <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
-      </div>
+</div>
+      <KkudaFooter />
     </div>
   );
 }

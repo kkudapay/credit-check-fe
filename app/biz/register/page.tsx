@@ -12,6 +12,7 @@ import { register } from '@/lib/auth-utils';
 import { toast } from 'sonner';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import { getCurrentSession } from '@/lib/auth-utils';
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 
 export default function registerPage() {
@@ -148,6 +149,7 @@ export default function registerPage() {
     return (
       <div>
         <HamburgerWithSidebar />
+        <div className="min-h-screen">
         <KkudaHeader />
 
         <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
@@ -157,6 +159,8 @@ export default function registerPage() {
             </p>
           </div>
         </div>
+        </div>
+        <KkudaFooter/>
       </div>
     );
   }
@@ -317,6 +321,7 @@ export default function registerPage() {
           <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
         </div>
       </div>
+      <KkudaFooter/>
     </div>
   );
 }

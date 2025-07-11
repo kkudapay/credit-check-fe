@@ -15,6 +15,7 @@ import { login } from '@/lib/auth-utils';
 import { toast } from 'sonner';
 
 import KkudaHeader from "@/components/ui/KkudaHeader";
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,7 +25,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const router = useRouter();
   const supabase = createClient()
-  
+
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -32,7 +33,7 @@ export default function LoginPage() {
 
     // 기본 유효성 검사
     const newErrors: { email?: string; password?: string } = {};
-    
+
     if (!email.trim()) {
       newErrors.email = '이메일을 입력해주세요';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -63,17 +64,17 @@ export default function LoginPage() {
       setIsLoading(false)
       return
     }
-    
+
     toast.success('로그인되었습니다. 어서오세요!', {
-  duration: 2000, 
-});
+      duration: 2000,
+    });
 
     // 로그인 성공
     router.refresh() // 세션 갱신
-    router.push('/biz') 
+    router.push('/biz')
   };
 
- 
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -85,18 +86,18 @@ export default function LoginPage() {
     router.push('/biz');
   };
 
-  
-  
+
+
   return (
-    
+
     <div>
       <HamburgerWithSidebar />
-      <KkudaHeader/>
+      <KkudaHeader />
       <div className="min-h-screen flex flex-col">
         {/* Header */}
-        
-                  
-                
+
+
+
 
         {/* Body */}
         <div className="mobile-container py-8 flex-1">
@@ -166,7 +167,7 @@ export default function LoginPage() {
                   '로그인'
                 )}
               </Button>
-              
+
               {/* <div className="text-center">
                 <p className="text-gray-600">
                   아직 계정이 없으신가요?{' '}
@@ -175,16 +176,14 @@ export default function LoginPage() {
                   </Link>
                 </p>
               </div> */}
-              
+
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="pb-8">
-          <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
-        </div>
+        
       </div>
+      <KkudaFooter/>
     </div>
   );
 }

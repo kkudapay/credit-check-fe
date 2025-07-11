@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { formatBusinessNumber, searchCompanies, type BusinessData } from '@/lib/business-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
-
+import KkudaFooter from '@/components/ui/KkudaFooter';
 
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -203,12 +203,12 @@ export default function BizSearchPage() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="pb-8">
-          <div className="w-32 h-1 bg-gray-300 rounded-full mx-auto"></div>
-        </div>
+        
       </div>
+      {/* Footer */}
+        
     </div>
+    
 
   );
 }

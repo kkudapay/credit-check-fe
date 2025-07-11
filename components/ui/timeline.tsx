@@ -54,20 +54,20 @@ export default function Timeline() {
   return (
     <div className="relative max-w-4xl mx-auto p-6">
       {/* Timeline line */}
-      <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-black"></div>
+      <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-black"></div>
       
       {timelineData.map((yearData, yearIndex) => (
         <div key={yearData.year} className="relative mb-12">
           {/* Year marker */}
           <div className="flex items-center mb-8">
             
-            <div className="ml-4">
+            <div className="ml-8">
               <h2 className="text-2xl font-bold text-gray-800">{yearData.year}</h2>
             </div>
           </div>
 
           {/* Milestones */}
-          <div className="ml-14 space-y-6">
+          <div className="ml-16 space-y-6">
             {yearData.milestones.map((milestone, milestoneIndex) => (
               <div
                 key={milestoneIndex}
@@ -83,7 +83,7 @@ export default function Timeline() {
 
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-3">
                       <h3 className=" whitespace-nowrap text-xl font-semibold text-gray-800">
                         {milestone.amount}
                       </h3>

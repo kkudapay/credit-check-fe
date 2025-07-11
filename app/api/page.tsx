@@ -10,7 +10,7 @@ export default function TestMetadataUpdatePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: '5c569b54-2d84-4494-b4c5-0807b37cb0f2',
+          userId: 'f1ecb4e9-59e2-4a44-911e-6ef26cfeba6c',
           metadata: { role: 'admin' },
         }),
       });

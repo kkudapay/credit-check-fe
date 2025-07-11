@@ -163,11 +163,11 @@ export async function getOverdueData(bizNumber: string): Promise<OverdueData | n
   // 실제 API가 만들어지기 전까지는 임시값 반환
   return {
     overdueInfo: {
-      hasOverdue: true,
-      totalAmount: 1500000,
-      overdueCount: 2,
-      firstOverdueDate: '2023-01-15',
-      lastOverdueDate: '2023-06-30',
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0,
+      firstOverdueDate: '0000-00-00',
+      lastOverdueDate: '0000-00-00',
     },
     lastUpdated: new Date().toISOString(),
   };

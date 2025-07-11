@@ -191,6 +191,7 @@ export default function CompanyDetailPage() {
           <div>
             <div className="flex items-center mb-3">
               <h2 className="text-lg font-semibold text-gray-900 mr-2">연체 정보</h2>
+              
               {companyData.overdueInfo.hasOverdue && (<button
                 onClick={() => { handleClick_GTM(); setShowGraph(!showGraph); }}
                 className="text-gray-600 hover:text-gray-800"
@@ -203,7 +204,8 @@ export default function CompanyDetailPage() {
 
 
 
-            <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="relative ">
+<div className="relative border-gray-100 blur-sm select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 {/*연체 유무*/}
                 <span className="text-gray-700">연체 유무</span>
@@ -258,9 +260,19 @@ export default function CompanyDetailPage() {
                   </span>
                 </div>
 
+
+
               </div>
 
+
+</div>
+            
+
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <h2 className="text-lg font-semibold text-red-600 text-center">연체정보 조회 서비스는 곧 오픈됩니다.
+              </h2>
             </div>
+</div>
           </div>
 
           {/* 사업자 정보 */}

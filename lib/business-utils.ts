@@ -58,7 +58,7 @@ export async function searchCompanies(input: string) {
     page: page.toString(),
   });
 
-  const url = `http://52.78.172.213:8080/api/v1/company?${queryParams.toString()}`;
+  const url = `https://api-credit.kkuda.kr/api/v1/company?${queryParams.toString()}`;
 
   try {
     const response = await fetch(url);
@@ -125,7 +125,7 @@ export async function getTotalData(bizNumber: string): Promise<(BusinessData & O
 export async function getBusinessData(bizNumber: string): Promise<BusinessData | null> {
   try {
     const response = await fetch(
-      `http://52.78.172.213:8080/api/v1/company?findType=1&value=${bizNumber}&page=1`
+      `https://api-credit.kkuda.kr/api/v1/company?findType=1&value=${bizNumber}&page=1`
     );
 
     if (!response.ok) {

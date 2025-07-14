@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Search, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { formatBusinessNumber, searchCompanies, type BusinessData } from '@/lib/business-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
@@ -18,22 +18,64 @@ export default function BizSearchPage() {
   const [showResults, setShowResults] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search')
+
+
 
   useEffect(() => {
 
-  
-
-    const savedTerm = window.sessionStorage.getItem('biz_search_current_term');
-    const raw = window.sessionStorage.getItem('biz_search_map');
-    const cache = raw ? JSON.parse(raw) : {};
+    /*
+        const savedTerm = window.sessionStorage.getItem('biz_search_current_term');
+        const raw = window.sessionStorage.getItem('biz_search_map');
+        const cache = raw ? JSON.parse(raw) : {};
+        
     
+        if (savedTerm && cache[savedTerm]) {
+          setSearchQuery(savedTerm);
+          setSearchResults(cache[savedTerm]);
+      
+        }
+          */
+    if (search) {
+      const raw = window.sessionStorage.getItem('biz_search_map');
+      const cache = raw ? JSON.parse(raw) : {};
+      setSearchQuery(search);
 
-    if (savedTerm && cache[savedTerm]) {
-      setSearchQuery(savedTerm);
-      setSearchResults(cache[savedTerm]);
-  
+      if (cache[search]) {
+        console.log("검색페이지, 캐시 사용");
+        setSearchResults(cache[search]);
+        setShowResults(true);
+        setNoResults(cache[search].length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
+        setIsSearching(false);
+      } else {
+        console.log("검색페이지, API 호출");
+        setTimeout(async () => {
+          setIsSearching(true);
+          const results = await searchCompanies(search); //검색어에 해당하는 사업자 배열 반환받음
+          setSearchResults(results);
+          setShowResults(true);
+          setNoResults(results.length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
+          setIsSearching(false);
+          cache[search] = results;
+          window.sessionStorage.setItem('biz_search_map', JSON.stringify(cache));
+        }, 800);
+      }
+      sessionStorage.setItem('biz_search_current_term', search);
+    } else {
+      setIsSearching(false);
+      setSearchResults([]);
+      setShowResults(false);
+      setNoResults(false);
+      setSearchQuery('');
+
     }
-  }, []);
+  }, [search]);
+
+  useEffect(() => {
+  console.log('첫 번째');
+}, [searchQuery]);
+
 
   //검색 처리 함수
   const handleSearch = async () => {
@@ -49,31 +91,11 @@ export default function BizSearchPage() {
     };
     TagManager.dataLayer(tagManagerArgs);
 
-    
-    const raw = window.sessionStorage.getItem('biz_search_map');
-    const cache = raw ? JSON.parse(raw) : {};
+    if (searchQuery.trim()) {
+      router.push(`/biz?search=${encodeURIComponent(searchQuery.trim())}`)
+    }
 
-    
-  if (cache[searchQuery]) {
-    console.log("검색페이지, 캐시 사용");
-    setSearchResults(cache[searchQuery]);
-    setShowResults(true);
-      setNoResults(cache[searchQuery].length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
-      setIsSearching(false);
-  } else {
-    console.log("검색페이지, API 호출");
-    setTimeout(async () => {
-      setIsSearching(true);
-      const results = await searchCompanies(searchQuery); //검색어에 해당하는 사업자 배열 반환받음
-      setSearchResults(results);
-      setShowResults(true);
-      setNoResults(results.length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
-      setIsSearching(false);
-      cache[searchQuery] = results;
-    window.sessionStorage.setItem('biz_search_map', JSON.stringify(cache));
-    }, 800);
-  }
-    sessionStorage.setItem('biz_search_current_term', searchQuery);
+
   };
 
 
@@ -90,12 +112,14 @@ export default function BizSearchPage() {
   };
 
   const handleGoHome = () => {
+    /*
     setSearchQuery('');
     setSearchResults([]);
       setShowResults(false);
       setNoResults(false); 
       setIsSearching(false);
-
+*/
+    router.push('/biz')
   };
 
 
@@ -119,7 +143,7 @@ export default function BizSearchPage() {
       <HamburgerWithSidebar />
 
       <div className="min-h-screen flex flex-col">
-        
+
 
 
         {/* Body */}
@@ -134,16 +158,16 @@ export default function BizSearchPage() {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 {searchQuery ? (<Input
                   type="text"
-                  
+
                   placeholder={searchQuery}
                   value={searchQuery}
                   onChange={handleInputChange}
                   onKeyPress={handleKeyPress}
                   className="pl-11 h-16 text-lg border-2 border-gray-200 rounded-xl "
                   disabled={isSearching}
-                />):(<Input
+                />) : (<Input
                   type="text"
-                  
+
                   placeholder="사업자번호 또는 상호명을 입력하세요"
                   value={searchQuery}
                   onChange={handleInputChange}
@@ -151,8 +175,8 @@ export default function BizSearchPage() {
                   className="pl-11 h-16 text-lg border-2 border-gray-200 rounded-xl "
                   disabled={isSearching}
                 />)}
-                
-                
+
+
               </div>
 
 
@@ -203,12 +227,12 @@ export default function BizSearchPage() {
           </div>
         </div>
 
-        
+
       </div>
       {/* Footer */}
-        
+
     </div>
-    
+
 
   );
 }

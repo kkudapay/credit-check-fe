@@ -20,11 +20,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import DOMPurify from 'dompurify';
 import { uploadImageToSupabase } from '@/lib/blog-utils'
+import { getCurrentSession, logout } from '@/lib/auth-utils';
+import { toast } from 'sonner';
 
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
   placeholder?: string;
+}
+
+function checkIfSanitized(originalHtml: string): boolean {
+  const sanitized = DOMPurify.sanitize(originalHtml);
+  return sanitized !== originalHtml;
 }
 
 export default function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
@@ -40,6 +47,8 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   const [showImageDialog, setShowImageDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [savedRange, setSavedRange] = useState<Range | null>(null);
+  const [showHtmlDialog, setShowHtmlDialog] = useState(false);
+const [htmlInput, setHtmlInput] = useState('');
 
   const fontSizes = [
     { label: '매우 작게', value: '1' },
@@ -332,6 +341,17 @@ const insertLink = () => {
             >
               <Minus className="h-4 w-4" />
             </Button>
+
+
+            {/* insert code*/}
+            <Button
+  variant="outline"
+  size="sm"
+  onClick={() => setShowHtmlDialog(true)}
+  className="h-8 w-8 p-0"
+>
+  {'</>'}
+</Button>
           </div>
         </div>
       </div>
@@ -502,6 +522,53 @@ const insertLink = () => {
           </div>
         </div>
       )}
+
+      {/*insert code dialog*/}
+      {showHtmlDialog && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 w-96 mx-4">
+      <h3 className="text-lg font-semibold mb-4">HTML 코드 삽입</h3>
+      <textarea
+        value={htmlInput}
+        onChange={(e) => setHtmlInput(e.target.value)}
+        placeholder="<b>굵게</b> 입력해보세요"
+        className="w-full h-40 border rounded p-2 text-sm"
+      />
+      <div className="flex space-x-2 mt-4">
+        <Button
+          onClick={() => {
+            if (!editorRef.current) return;
+            if (checkIfSanitized(htmlInput)) {
+              toast.error('코드에 작성 불가능한 요소가 포함되어 있거나, 형식이 불완전합니다.', {
+      duration: 4000,
+    });
+  
+  return;
+}
+            editorRef.current.focus();
+            handleCommand('insertHTML', DOMPurify.sanitize(htmlInput));
+            setShowHtmlDialog(false);
+            setHtmlInput('');
+          }}
+          className="flex-1 bg-orange-500 hover:bg-orange-600"
+        >
+          삽입
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setShowHtmlDialog(false);
+            setHtmlInput('');
+          }}
+          className="flex-1"
+        >
+          취소
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Click outside handlers */}
       {(showFontSizeDropdown || showColorPalette) && (

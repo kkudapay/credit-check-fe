@@ -57,11 +57,13 @@ export default function BlogPage() {
     router.push('/biz/blog/create');
   };
 
-  const handleEditPost = (postId: number) => {
+  const handleEditPost = (postId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
     router.push(`/biz/blog/edit/${postId}`);
   };
 
-  const handleDeletePost = (postId: number) => {
+  const handleDeletePost = (postId: number,  e: React.MouseEvent) => {
+    e.stopPropagation();
     if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
       deleteBlogPost(postId);
 
@@ -169,7 +171,7 @@ export default function BlogPage() {
                                                     size="sm"
                                                     variant="outline"
                                                     className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
-                                                    onClick={(e) => handleEditPost(post.id)}
+                                                    onClick={(e) => handleEditPost(post.id, e)}
                                                 >
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
@@ -177,7 +179,7 @@ export default function BlogPage() {
                                                     size="sm"
                                                     variant="outline"
                                                     className="h-8 w-8 p-0 bg-white/90 hover:bg-white text-red-600 hover:text-red-800"
-                                                    onClick={(e) => handleDeletePost(post.id)}
+                                                    onClick={(e) => handleDeletePost(post.id, e)}
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>

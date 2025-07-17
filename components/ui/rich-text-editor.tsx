@@ -44,7 +44,6 @@ export function extractImageUrlsFromContent(htmlContent: string): string[] {
 }
 
 
-
 export function deleteUnusedURLs(content: string){
   const usedImages = extractImageUrlsFromContent(content);
   
@@ -54,6 +53,8 @@ export function deleteUnusedURLs(content: string){
     deleteImageFromSupabase(url);
   }
 }
+
+
 
 export function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
   const [showLinkDialog, setShowLinkDialog] = useState(false);

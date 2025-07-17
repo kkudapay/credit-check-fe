@@ -6,7 +6,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getBlogPost, updateBlogPost, type BlogPost } from '@/lib/blog-utils';
-import RichTextEditor from '@/components/ui/rich-text-editor';
+import {RichTextEditor} from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";

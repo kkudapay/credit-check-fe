@@ -47,10 +47,9 @@ export function extractImageUrlsFromContent(htmlContent: string): string[] {
 
 export function deleteUnusedURLs(content: string){
   const usedImages = extractImageUrlsFromContent(content);
-  console.log(finalImageURLs);
+  
   const unusedImages = finalImageURLs.filter(url => !usedImages.includes(url));
-  console.log(usedImages);
-  console.log(unusedImages);
+ 
   for (const url of unusedImages) {
     deleteImageFromSupabase(url);
   }

@@ -133,7 +133,7 @@ export async function createBlogPost({ title, content, thumbnail }: { title: str
 
 
 // 블로그 포스트 업데이트
-export async function updateBlogPost(id: number, { title, content }: { title: string; content: string }) {
+export async function updateBlogPost(id: number, { title, content, thumbnail }: { title: string; content: string; thumbnail:string  }) {
   const supabase = createClient_cl();
   await checkAdminOrThrow();
 
@@ -142,6 +142,7 @@ export async function updateBlogPost(id: number, { title, content }: { title: st
     .update({
       title,
       content,
+      thumbnail,
       updatedAt: new Date().toISOString(),
     })
     .eq('id', id);

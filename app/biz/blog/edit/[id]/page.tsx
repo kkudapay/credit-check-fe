@@ -5,12 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { getBlogPost, updateBlogPost, type BlogPost } from '@/lib/blog-utils';
-import {RichTextEditor} from '@/components/ui/rich-text-editor';
+import { getBlogPost, updateBlogPost, deleteImageFromSupabase, type BlogPost } from '@/lib/blog-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
+import {RichTextEditor, deleteUnusedURLs, extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
 
 export default function EditBlogPage() {
   const params = useParams();
@@ -22,6 +22,7 @@ export default function EditBlogPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [initialURLS, setinitialURLS] = useState<string[]>([]);
 
 
   const postId = Number(params.id);
@@ -51,6 +52,8 @@ export default function EditBlogPage() {
           setPost(blogPost);
           setTitle(blogPost.title);
           setContent(blogPost.content);
+          const temp = extractImageUrlsFromContent(blogPost.content);
+          setinitialURLS(temp);
         } else {
           setNotFound(true);
         }
@@ -87,11 +90,23 @@ export default function EditBlogPage() {
 
     setIsSaving(true);
 
+    const finalURLS = extractImageUrlsFromContent(content);
+        console.log(finalURLS);
+        console.log(initialURLS);
+      const unusedImages = initialURLS.filter(url => !finalURLS.includes(url));
+     console.log(unusedImages);
+      for (const url of unusedImages) {
+        deleteImageFromSupabase(url);
+      }
+        
+    const thumbnail = extractImageUrlsFromContent(content)[0] ?? '';
+
     // 저장 시뮬레이션
     setTimeout(() => {
       updateBlogPost(postId, {
         title: title.trim(),
-        content: content
+        content: content,
+        thumbnail: thumbnail
       });
       setIsSaving(false);
       router.push('/biz/blog');

@@ -21,6 +21,7 @@ export default function CreateBlogPage() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
 
   // 로그인 여부 확인
   useEffect(() => {

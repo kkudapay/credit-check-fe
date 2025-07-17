@@ -7,6 +7,7 @@ export interface BlogPost {
   content: string;
   createdAt: string;
   updatedAt: string;
+  thumbnail: string;
 }
 
 //DB에 이미지 업로드
@@ -107,16 +108,26 @@ export async function checkAdminOrThrow() {
 
 
 // 블로그 포스트 생성
-export async function createBlogPost({ title, content }: { title: string; content: string }) {
+export async function createBlogPost({ title, content, thumbnail }: { title: string; content: string; thumbnail:string }) {
   const supabase = createClient_cl();
   const userId = await checkAdminOrThrow();
 
-  const { data, error: insertError } = await supabase
+  if (thumbnail!= null){
+    const { data, error: insertError } = await supabase
+    .from('blog_posts')
+    .insert([{ title, content, userId, thumbnail }]);
+
+  if (insertError) throw insertError;
+  return data;
+  } else{
+    const { data, error: insertError } = await supabase
     .from('blog_posts')
     .insert([{ title, content, userId }]);
 
   if (insertError) throw insertError;
   return data;
+  }
+  
 }
 
 
@@ -138,6 +149,7 @@ export async function updateBlogPost(id: number, { title, content }: { title: st
   if (updateError) throw updateError;
   return data;
 }
+
 
 
 // 블로그 포스트 삭제

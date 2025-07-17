@@ -36,12 +36,14 @@ function checkIfSanitized(originalHtml: string): boolean {
 
 const finalImageURLs: string[] = [];
 
-function extractImageUrlsFromContent(htmlContent: string): string[] {
+export function extractImageUrlsFromContent(htmlContent: string): string[] {
   const div = document.createElement('div');
   div.innerHTML = htmlContent;
   const imgs = div.querySelectorAll('img');
   return Array.from(imgs).map(img => img.src);
 }
+
+
 
 export function deleteUnusedURLs(content: string){
   const usedImages = extractImageUrlsFromContent(content);

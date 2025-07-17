@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getBlogPosts, deleteBlogPost, type BlogPost } from '@/lib/blog-utils';
+import { getBlogPosts, deleteBlogPost, deleteImageFromSupabase, type BlogPost } from '@/lib/blog-utils';
 import { formatDate, isNewPost } from '@/lib/format-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import DOMPurify from 'dompurify';
 import { createClient } from '@/lib/supabaseClient';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
+import {extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -57,6 +58,15 @@ export default function BlogPage() {
   const handleDeletePost = (postId: number) => {
     if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
       deleteBlogPost(postId);
+
+      const post = posts.find((p) => p.id === postId);
+      if (post) {
+  const usedImages = extractImageUrlsFromContent(post.content);
+  for (const url of usedImages) {
+    deleteImageFromSupabase(url);
+  }
+} 
+      
       setPosts(posts.filter(post => post.id !== postId));
     }
   };

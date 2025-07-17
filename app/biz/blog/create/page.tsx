@@ -6,7 +6,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createBlogPost } from '@/lib/blog-utils';
-import RichTextEditor from '@/components/ui/rich-text-editor';
+import {RichTextEditor, deleteUnusedURLs} from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
@@ -65,6 +65,9 @@ export default function CreateBlogPage() {
     }
 
     setIsSaving(true);
+
+    //사용되지 않은 사진 URL을 supabase에서 삭제
+    deleteUnusedURLs(content);
 
 
     try {

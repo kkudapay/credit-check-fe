@@ -28,6 +28,38 @@ export async function uploadImageToSupabase(file: File): Promise<string> {
   return data.publicUrl;
 }
 
+function extractFilePathFromUrl(publicUrl: string): string {
+  const marker = '/object/public/images/';
+  const index = publicUrl.indexOf(marker);
+  if (index === -1) {
+    throw new Error('유효하지 않은 Supabase public URL');
+  }
+  console.log('index + marker.length: ', publicUrl.substring(index + marker.length));
+
+  // 'images/...' 경로 추출
+  return publicUrl.substring(index + marker.length);
+}
+
+//DB에 이미지 삭제
+export async function deleteImageFromSupabase(url: string): Promise<void> {
+  console.log('안쓴 이미지 삭제, url: ', url);
+  const supabase = createClient_cl();
+  const filePath = extractFilePathFromUrl(url);
+  console.log('filePath: ', filePath);
+  /*
+  const { data, error } = await supabase.storage.from('images').list('blog-images');
+console.log(data);
+*/
+  const { data, error } = await supabase.storage.from('images').remove([filePath]);
+  console.log('삭제 요청 후 data: ', data);
+  
+  if (error) {
+    console.error('삭제 오류:', error.message);
+    throw new Error('이미지 삭제 실패');
+  }
+}
+
+
 
 // 모든 블로그 포스트 가져오기
 export async function getBlogPosts() {

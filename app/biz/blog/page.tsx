@@ -148,7 +148,7 @@ export default function BlogPage() {
                       <div className="flex items-center space-x-2 mb-2">
                         <h3 className="font-semibold text-gray-900 text-lg">{post.title}</h3>
                         {isNewPost(post.createdAt) && (
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                          <span className="bg-[#FF8D51] text-white text-[10px] px-1 py-0.5 rounded-full font-medium">
                             NEW
                           </span>
                         )}

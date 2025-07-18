@@ -93,11 +93,11 @@ const [isAdmin, setIsAdmin] = useState(false);
 
 
   const handleBack = () => {
-    router.push('/biz/blog');
+    router.push('/blog');
   };
 
   const handleEdit = () => {
-    router.push(`/biz/blog/edit/${postId}`);
+    router.push(`/blog/edit/${postId}`);
   };
 
   const handleDelete = async () => {
@@ -110,7 +110,7 @@ const [isAdmin, setIsAdmin] = useState(false);
       }
       
       await deleteBlogPost(postId);
-      router.push('/biz/blog');
+      router.push('/blog');
     }
   };
 

@@ -1,76 +1,53 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, ChevronsRightLeftIcon, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { getBlogPost, updateBlogPost, deleteImageFromSupabase, type BlogPost } from '@/lib/blog-utils';
+import { createBlogPost } from '@/lib/blog-utils';
+import {RichTextEditor, deleteUnusedURLs, extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
-import {RichTextEditor, deleteUnusedURLs, extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
 
-export default function EditBlogPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [post, setPost] = useState<BlogPost | null>(null);
+
+
+export default function CreateBlogPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [notFound, setNotFound] = useState(false);
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const [initialURLS, setinitialURLS] = useState<string[]>([]);
-
-
-  const postId = Number(params.id);
+  const [isLoading, setIsLoading] = useState(true);
+  
 
   // 로그인 여부 확인
   useEffect(() => {
+
     const checkSession = async () => {
       const session = await getCurrentSession();
-      setIsLoggedIn(!!session); // true 또는 false로 설정됨
+      setIsLoggedIn(!!session);
     };
 
     checkSession();
   }, []);
 
   useEffect(() => {
+
     if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
 
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
       setIsLoading(false);
       return;
     }
 
-    const timer = setTimeout(() => {
-      const fetchPost = async () => {
-        const blogPost = await getBlogPost(postId);
-        if (blogPost) {
-          setPost(blogPost);
-          setTitle(blogPost.title);
-          setContent(blogPost.content);
-          const temp = extractImageUrlsFromContent(blogPost.content);
-          setinitialURLS(temp);
-        } else {
-          setNotFound(true);
-        }
-        setIsLoading(false);
-      };
 
-      fetchPost();
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [isLoggedIn, postId]);
-
-
-
+  }, [isLoggedIn]);
 
   const handleBack = () => {
-    router.push('/biz/blog');
+    router.push('/blog');
   };
 
   const goHome = () => {
@@ -90,40 +67,51 @@ export default function EditBlogPage() {
 
     setIsSaving(true);
 
-    const finalURLS = extractImageUrlsFromContent(content);
-        console.log(finalURLS);
-        console.log(initialURLS);
-      const unusedImages = initialURLS.filter(url => !finalURLS.includes(url));
-     console.log(unusedImages);
-      for (const url of unusedImages) {
-        deleteImageFromSupabase(url);
-      }
-        
-    const thumbnail = extractImageUrlsFromContent(content)[0] ?? '';
+    //사용되지 않은 사진 URL을 supabase에서 삭제
+    deleteUnusedURLs(content);
+    
+    const thumbnail = extractImageUrlsFromContent(content)[0];
+    
 
-    // 저장 시뮬레이션
-    setTimeout(() => {
-      updateBlogPost(postId, {
+    try {
+      await createBlogPost({
         title: title.trim(),
         content: content,
         thumbnail: thumbnail
       });
+
+      router.push('/blog');
+    } catch (error) {
+      console.error('글 저장 실패:', error);
+      alert('글 저장 중 오류가 발생했습니다.');
+    } finally {
       setIsSaving(false);
-      router.push('/biz/blog');
-    }, 1000);
+    }
   };
+
+
+
 
   if (!isLoggedIn) {
     return (
       <div>
         <HamburgerWithSidebar />
         <div className="min-h-screen ">
-        <KkudaHeader />
+          
+        <div className="bg-white border-b">
+          <div className="mobile-container py-4">
+            <div className="flex items-center justify-between">
+              <div onClick={goHome} className="text-orange-500 text-xl font-bold mt-2 mb-2 cursor-pointer ">
+                꾸다 외상체크
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="mobile-container min-h-[calc(150vh/2)] flex items-center justify-center">
           <div className="text-center py-16">
             <p className="text-gray-600 text-lg">
-              글을 수정할 권한이 없습니다.
+              글을 작성할 권한이 없습니다.
             </p>
           </div>
         </div>
@@ -142,34 +130,16 @@ export default function EditBlogPage() {
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">글을 불러오는 중...</p>
+            <p className="text-gray-600">로딩중...</p>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  if (notFound || !post) {
-    return (
-      <div>
-        <HamburgerWithSidebar />
-        <div className="min-h-screen ">
-        <KkudaHeader />
-
-        <div className="mobile-container py-8">
-          <div className="text-center py-16">
-            <p className="text-gray-600 text-lg">
-              존재하지 않는 게시글입니다.
-            </p>
-          </div>
-        </div>
-        </div>
-        <KkudaFooter/>
       </div>
     );
   }
 
   return (
+
+
     <div>
       <HamburgerWithSidebar />
 <div className="min-h-screen ">
@@ -179,7 +149,7 @@ export default function EditBlogPage() {
       {/* Content */}
       <div className="mobile-container py-6 space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">글 수정</h1>
+          <h1 className="text-2xl font-bold text-gray-900">글 작성</h1>
           <Button
             onClick={handleSave}
             disabled={isSaving || !title.trim() || !content.trim()}
@@ -214,14 +184,12 @@ export default function EditBlogPage() {
         <div className="bg-white rounded-lg border border-gray-200">
           <RichTextEditor
             content={content}
-
             onChange={setContent}
             placeholder="내용을 입력하세요..."
           />
         </div>
       </div>
 </div>
-
       <KkudaFooter/>
     </div>
   );

@@ -112,14 +112,14 @@ export default function HamburgerWithSidebar() {
             ) : (
               <>
                 <Link 
-                  href="/biz/login"
+                  href="/login"
                   className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   로그인
                 </Link>
                 <Link 
-                  href="/biz/register"
+                  href="/register"
                   className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
@@ -140,7 +140,7 @@ export default function HamburgerWithSidebar() {
  
             
             <Link 
-              href="/biz/blog"
+              href="/blog"
               className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               onClick={() => setIsOpen(false)}
             >

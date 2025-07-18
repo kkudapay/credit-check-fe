@@ -42,10 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${title} - 꾸다 외상체크 블로그`,
       description: `${title} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
-      url: `https://credit.kkuda.kr/biz/blog/${params.postId}`,
+      url: `https://credit.kkuda.kr/blog/${params.postId}`,
     },
     alternates: {
-      canonical: `https://credit.kkuda.kr/biz/blog/${params.postId}`,
+      canonical: `https://credit.kkuda.kr/blog/${params.postId}`,
     },
   };
   } else {

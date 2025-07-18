@@ -50,16 +50,16 @@ export default function BlogPage() {
 
   const handlePostClick = (postId: number) => {
     
-        router.push(`/biz/blog/${postId}`);
+        router.push(`/blog/${postId}`);
     };
 
   const handleCreatePost = () => {
-    router.push('/biz/blog/create');
+    router.push('/blog/create');
   };
 
   const handleEditPost = (postId: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    router.push(`/biz/blog/edit/${postId}`);
+    router.push(`/blog/edit/${postId}`);
   };
 
   const handleDeletePost = (postId: number,  e: React.MouseEvent) => {

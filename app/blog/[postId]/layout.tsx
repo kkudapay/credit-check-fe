@@ -1,33 +1,13 @@
 //동적 메타데이터 설정을 위한 함수를 담은 파일
 import { Metadata } from 'next';
+import {getBlogTitle} from '@/lib/getBlogTitle';
 
 //변수지정
 interface Props {
   params: { postId: string };
 }
 
-export async function getBlogTitle(id: number) {
-  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/blog_titles?postId=eq.${id}&select=title`;
 
-  const res = await fetch(url, {
-    headers: {
-      apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    },
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    console.error('Failed to fetch:', await res.text());
-    return null;
-  }
-
-  const data = await res.json();
-  if (data.length > 0) {
-    return data[0].title;
-  }
-
-  return null;
-}
 
 
 //동적 메타데이터 불러오는 함수, 사업자번호를 입력받음.

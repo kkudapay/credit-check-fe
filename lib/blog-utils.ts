@@ -127,7 +127,6 @@ export async function createBlogPost({ title, content, thumbnail }: { title: str
   if (insertError) throw insertError;
   return data;
   }
-  
 }
 
 

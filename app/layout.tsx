@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google';
 import { sharedMetadata } from './shared-metadata';
 import GTMInitializer from '@/components/ui/GTMInitializer';
 import { Toaster } from 'sonner'; // sonner 알람 사용을 위해
+import paviconImage from '@/src/image/credit_kkuda_favicon.svg';
+
 // GTM을 위한 값 선언
 declare global {
   interface Window {
@@ -53,7 +55,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Toaster position="top-center" richColors /> 
-        
+        <link rel="shortcut icon" href={paviconImage.src} />
         <GTMInitializer /> {children}</body>
     </html>
   );

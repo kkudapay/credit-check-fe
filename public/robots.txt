@@ -1,4 +1,7 @@
 User-agent: *
-Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /blog/create
+Disallow: /blog/edit
 
 Sitemap: https://credit.kkuda.kr/sitemap.xml

@@ -1,15 +1,16 @@
-import { sharedMetadata } from '../shared-metadata';
+import type { Metadata } from 'next';
 
-import '../globals.css';
-import { Toaster } from 'sonner'; // sonner 알람 사용을 위해
-
-export const metadata = sharedMetadata;
+export const metadata: Metadata = {
+  title: 'Biz',
+  alternates: {
+    canonical: 'https://credit.kkuda.kr/biz',
+  },
+};
 
 export default function BizLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-        <Toaster position="top-center" richColors /> 
-        {children}
+      {children}
       </>
   );
 }

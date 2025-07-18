@@ -3,6 +3,8 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { sharedMetadata } from './shared-metadata';
 import GTMInitializer from '@/components/ui/GTMInitializer';
+import { Toaster } from 'sonner'; // sonner 알람 사용을 위해
+import paviconImage from '@/src/image/credit_kkuda_favicon.svg';
 
 // GTM을 위한 값 선언
 declare global {
@@ -48,9 +50,13 @@ export default function RootLayout({
             })
           }}
         />
+        <meta name="naver-site-verification" content="8fe9477cf9a986d3bcb0e6aef2c1ea9cb1b3923a" />
         <meta name="google-site-verification" content="tZl4zpaDfoMQLHloR4n4J-QWKYzF9ip8YWp1OrB8LtI" />
       </head>
-      <body className={inter.className}><GTMInitializer /> {children}</body>
+      <body className={inter.className}>
+        <Toaster position="top-center" richColors /> 
+        <link rel="shortcut icon" href={paviconImage.src} />
+        <GTMInitializer /> {children}</body>
     </html>
   );
 }

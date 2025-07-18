@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, ChevronsRightLeftIcon, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createBlogPost } from '@/lib/blog-utils';
-import RichTextEditor from '@/components/ui/rich-text-editor';
+import {RichTextEditor, deleteUnusedURLs, extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
@@ -21,6 +21,7 @@ export default function CreateBlogPage() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
 
   // 로그인 여부 확인
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function CreateBlogPage() {
   }, [isLoggedIn]);
 
   const handleBack = () => {
-    router.push('/biz/blog');
+    router.push('/blog');
   };
 
   const goHome = () => {
@@ -66,14 +67,20 @@ export default function CreateBlogPage() {
 
     setIsSaving(true);
 
+    //사용되지 않은 사진 URL을 supabase에서 삭제
+    deleteUnusedURLs(content);
+    
+    const thumbnail = extractImageUrlsFromContent(content)[0];
+    
 
     try {
       await createBlogPost({
         title: title.trim(),
-        content: content
+        content: content,
+        thumbnail: thumbnail
       });
 
-      router.push('/biz/blog');
+      router.push('/blog');
     } catch (error) {
       console.error('글 저장 실패:', error);
       alert('글 저장 중 오류가 발생했습니다.');

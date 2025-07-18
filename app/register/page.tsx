@@ -123,7 +123,7 @@ export default function registerPage() {
       duration: 2000,
     });
 
-    router.push('/biz/login');
+    router.push('/login');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -307,7 +307,7 @@ export default function registerPage() {
               <div className="text-center">
                 <p className="text-gray-600">
                   이미 계정이 있으신가요?{' '}
-                  <Link href="/biz/login" className="text-orange-500 hover:text-orange-600 font-medium">
+                  <Link href="/login" className="text-orange-500 hover:text-orange-600 font-medium">
                     로그인
                   </Link>
                 </p>

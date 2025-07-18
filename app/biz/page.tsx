@@ -11,6 +11,7 @@ import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
 import KkudaFooter from '@/components/ui/KkudaFooter';
 
+
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<BusinessData[]>([]);

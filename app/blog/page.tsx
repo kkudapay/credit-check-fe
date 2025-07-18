@@ -161,7 +161,7 @@ export default function BlogPage() {
                                         />)}
 
                                         {isNewPost(post.createdAt) && (
-                                            <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                                            <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                                                 NEW
                                             </span>
                                         )}

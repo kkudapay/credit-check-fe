@@ -206,7 +206,7 @@ const [isAdmin, setIsAdmin] = useState(false);
                   className="w-full h-64 md:h-80 object-cover"
                 />
                 {isNewPost(post.createdAt) && (
-                  <span className="absolute top-4 left-4 bg-orange-500 text-white text-sm px-3 py-1 rounded-full font-medium">
+                  <span className="absolute top-4 left-4 bg-red-500 text-white text-sm px-3 py-1 rounded-full font-medium">
                     NEW
                   </span>
                 )}

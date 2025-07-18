@@ -201,7 +201,7 @@ export default function BizSearchPage() {
 
 
             {!isSearching && noResults && (
-              <div className="text-center text-gray-600 py-8">
+              <div className="text-center text-2xl text-gray-600 py-8 font-semibold">
                 국세청에 등록되지 않은 사업자입니다
               </div>
             )}
@@ -231,7 +231,8 @@ export default function BizSearchPage() {
 
       </div>
       {/* Footer */}
-
+      {!isSearching && searchResults.length > 0 && (
+<div className="h-[500px]" />)}
     </div>
 
 

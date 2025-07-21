@@ -233,7 +233,7 @@ const [isAdmin, setIsAdmin] = useState(false);
             <div className="p-6">
               <div
                 className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: purifier.sanitize(post.content) }}
+                dangerouslySetInnerHTML={{ __html: purifier(post.content) }}
               />
             </div>
           </article>

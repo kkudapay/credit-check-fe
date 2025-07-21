@@ -1,9 +1,13 @@
 import DOMPurify from 'dompurify';
 
-const purifier = DOMPurify();
+const sanitizer = DOMPurify.sanitize;
 
-purifier.setConfig({
-  ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
-});
+
+const purifier = (htmlContent: string) => {
+return sanitizer(htmlContent,
+  {
+    ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+  })
+};
 
 export default purifier;

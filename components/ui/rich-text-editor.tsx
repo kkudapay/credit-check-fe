@@ -30,7 +30,7 @@ interface RichTextEditorProps {
 }
 
 function checkIfSanitized(originalHtml: string): boolean {
-  const sanitized = purifier.sanitize(originalHtml);
+  const sanitized = purifier(originalHtml);
   return sanitized !== originalHtml;
 }
 
@@ -93,7 +93,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   useEffect(() => {
     if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
-      const clean = purifier.sanitize(content);
+      const clean = purifier(content);
       editorRef.current.innerHTML = clean;
     }
   }, [content, isFocused]);
@@ -108,7 +108,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   const updateContent = () => {
     if (editorRef.current) {
       const before = editorRef.current.innerHTML;
-      const clean = purifier.sanitize(before);
+      const clean = purifier(before);
 
       if (clean.length > MAX_HTML_LENGTH) {
         alert(`글이 너무 깁니다. ${MAX_HTML_LENGTH}자 이내로 작성해주세요.`);
@@ -613,7 +613,7 @@ const handleAltChange = (index: number, newAlt: string) => {
                   }*/}
                   
                   editorRef.current.focus();
-                  handleCommand('insertHTML', purifier.sanitize(htmlInput));
+                  handleCommand('insertHTML', purifier(htmlInput));
                   setShowHtmlDialog(false);
                   setHtmlInput('');
                 }}

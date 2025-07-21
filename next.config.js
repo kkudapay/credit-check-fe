@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-/*
+
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline';
@@ -52,8 +52,8 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-*/
 
+/*
 
 const nextConfig = {
   //output: 'export',
@@ -65,3 +65,4 @@ const nextConfig = {
 
 module.exports = nextConfig;
 
+*/

@@ -53,8 +53,8 @@ const nextConfig = {
 
 module.exports = nextConfig;
 
-/*
 
+/*
 const nextConfig = {
   //output: 'export',
   eslint: {

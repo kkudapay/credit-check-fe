@@ -28,7 +28,7 @@ declare global {
 }
 
 
-const inter = Inter({ subsets: ['latin'] });
+//const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = sharedMetadata;
 
@@ -67,7 +67,7 @@ export default function RootLayout({
         <meta name="naver-site-verification" content="8fe9477cf9a986d3bcb0e6aef2c1ea9cb1b3923a" />
         <meta name="google-site-verification" content="tZl4zpaDfoMQLHloR4n4J-QWKYzF9ip8YWp1OrB8LtI" />
       </head>
-      <body className={inter.className} >
+      <body className={pretendard.className} >
         <Toaster position="top-center" richColors /> 
         <link rel="shortcut icon" href={paviconImage.src} />
         <GTMInitializer /> {children}</body>

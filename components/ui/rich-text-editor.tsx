@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import DOMPurify from 'dompurify';
+import purifier from '@/lib/purifier';
 import { uploadImageToSupabase, deleteImageFromSupabase } from '@/lib/blog-utils'
 import { getCurrentSession, logout } from '@/lib/auth-utils';
 import { toast } from 'sonner';
@@ -30,7 +30,7 @@ interface RichTextEditorProps {
 }
 
 function checkIfSanitized(originalHtml: string): boolean {
-  const sanitized = DOMPurify.sanitize(originalHtml);
+  const sanitized = purifier.sanitize(originalHtml);
   return sanitized !== originalHtml;
 }
 
@@ -93,7 +93,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   useEffect(() => {
     if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
-      const clean = DOMPurify.sanitize(content);
+      const clean = purifier.sanitize(content);
       editorRef.current.innerHTML = clean;
     }
   }, [content, isFocused]);
@@ -108,7 +108,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   const updateContent = () => {
     if (editorRef.current) {
       const before = editorRef.current.innerHTML;
-      const clean = DOMPurify.sanitize(before);
+      const clean = purifier.sanitize(before);
 
       if (clean.length > MAX_HTML_LENGTH) {
         alert(`글이 너무 깁니다. ${MAX_HTML_LENGTH}자 이내로 작성해주세요.`);
@@ -613,7 +613,7 @@ const handleAltChange = (index: number, newAlt: string) => {
                   }*/}
                   
                   editorRef.current.focus();
-                  handleCommand('insertHTML', DOMPurify.sanitize(htmlInput));
+                  handleCommand('insertHTML', purifier.sanitize(htmlInput));
                   setShowHtmlDialog(false);
                   setHtmlInput('');
                 }}

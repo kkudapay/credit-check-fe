@@ -1,7 +1,7 @@
 import sitemap from '@/lib/sitemap';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 604800;
 
 // app/sitemap.xml/route.ts
 export async function GET() {

@@ -8,8 +8,7 @@ async function getBusinessNumber() {
   const res = await fetch(url, {
     headers: {
       apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    },
-    cache: 'no-store',
+    }
   });
 
   if (!res.ok) {
@@ -17,6 +16,7 @@ async function getBusinessNumber() {
     return null;
   }
   const data = await res.json();
+  console.log(data);
   return data;
 }
 

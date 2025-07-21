@@ -29,9 +29,20 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
+function isHtmlEquivalent(html1: string, html2: string): boolean {
+  const parser = new DOMParser();
+
+  const doc1 = parser.parseFromString(html1, 'text/html');
+  const doc2 = parser.parseFromString(html2, 'text/html');
+
+  return doc1.body.isEqualNode(doc2.body);
+}
+
 function checkIfSanitized(originalHtml: string): boolean {
   const sanitized = purifier(originalHtml);
-  return sanitized !== originalHtml;
+  console.log("전: ", originalHtml)
+  console.log("후: ", sanitized )
+  return isHtmlEquivalent(originalHtml, sanitized);
 }
 
 const finalImageURLs: string[] = [];
@@ -604,18 +615,22 @@ const handleAltChange = (index: number, newAlt: string) => {
               <Button
                 onClick={() => {
                   if (!editorRef.current) return;
-                  {/*if (checkIfSanitized(htmlInput)) {
+                  {if (checkIfSanitized(htmlInput)) {
                     toast.error('코드에 작성 불가능한 요소가 포함되어 있거나, 형식이 불완전합니다.', {
                       duration: 4000,
                     });
 
                     return;
-                  }*/}
+                  }}
                   
                   editorRef.current.focus();
                   handleCommand('insertHTML', purifier(htmlInput));
                   setShowHtmlDialog(false);
                   setHtmlInput('');
+
+                  toast.info('위험요소가 있는 코드는 자동으로 삭제됐을 수 있습니다. (ex. 링크, 이미지)', {
+                      duration: 5000,
+                    });
                 }}
                 className="flex-1 bg-orange-500 hover:bg-orange-600"
               >

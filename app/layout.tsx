@@ -4,7 +4,21 @@ import { Inter } from 'next/font/google';
 import { sharedMetadata } from './shared-metadata';
 import GTMInitializer from '@/components/ui/GTMInitializer';
 import { Toaster } from 'sonner'; // sonner 알람 사용을 위해
-import paviconImage from '@/src/image/credit_kkuda_favicon.svg';
+import paviconImage from '@/public/image/credit_kkuda_favicon.svg';
+import localFont from 'next/font/local';
+
+/*
+const pretendard = localFont({
+  src: '../public/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '100 900',
+  variable: '--font-pretendard',
+})
+*/
+
+const pretendard = localFont({
+  src: '../public/fonts/PretendardVariable.woff2',
+})
 
 // GTM을 위한 값 선언
 declare global {
@@ -14,7 +28,7 @@ declare global {
 }
 
 
-const inter = Inter({ subsets: ['latin'] });
+//const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = sharedMetadata;
 
@@ -29,7 +43,7 @@ export default function RootLayout({
 }) {
   return (
     
-    <html lang="ko">
+    <html lang="ko" className={pretendard.className}>
       <head>
         <script
           type="application/ld+json"
@@ -53,7 +67,7 @@ export default function RootLayout({
         <meta name="naver-site-verification" content="8fe9477cf9a986d3bcb0e6aef2c1ea9cb1b3923a" />
         <meta name="google-site-verification" content="tZl4zpaDfoMQLHloR4n4J-QWKYzF9ip8YWp1OrB8LtI" />
       </head>
-      <body className={inter.className}>
+      <body className={pretendard.className} >
         <Toaster position="top-center" richColors /> 
         <link rel="shortcut icon" href={paviconImage.src} />
         <GTMInitializer /> {children}</body>

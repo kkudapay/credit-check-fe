@@ -1,4 +1,4 @@
-import { createClient as createClient_cl } from '@/lib/supabaseClient';
+import supabase from '@/lib/supabaseClient';
 
 
 export interface BlogPost {
@@ -12,7 +12,7 @@ export interface BlogPost {
 
 //DB에 이미지 업로드
 export async function uploadImageToSupabase(file: File): Promise<string> {
-  const supabase = createClient_cl();
+  
 
   const fileExt = file.name.split('.').pop();
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
@@ -44,7 +44,6 @@ function extractFilePathFromUrl(publicUrl: string): string {
 //DB에 이미지 삭제
 export async function deleteImageFromSupabase(url: string): Promise<void> {
   console.log('안쓴 이미지 삭제, url: ', url);
-  const supabase = createClient_cl();
   const filePath = extractFilePathFromUrl(url);
   console.log('filePath: ', filePath);
   /*
@@ -64,7 +63,7 @@ console.log(data);
 
 // 모든 블로그 포스트 가져오기
 export async function getBlogPosts() {
-  const supabase = createClient_cl();
+
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
@@ -76,7 +75,7 @@ export async function getBlogPosts() {
 
 // 특정 블로그 포스트 가져오기
 export async function getBlogPost(id: number) {
-  const supabase = createClient_cl();
+
   const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
@@ -90,7 +89,7 @@ export async function getBlogPost(id: number) {
 
 
 export async function checkAdminOrThrow() {
-  const supabase = createClient_cl();
+
   const {
     data: { session },
     error
@@ -109,7 +108,7 @@ export async function checkAdminOrThrow() {
 
 // 블로그 포스트 생성
 export async function createBlogPost({ title, content, thumbnail }: { title: string; content: string; thumbnail:string }) {
-  const supabase = createClient_cl();
+ 
   const userId = await checkAdminOrThrow();
 
   if (thumbnail!= null){
@@ -133,7 +132,7 @@ export async function createBlogPost({ title, content, thumbnail }: { title: str
 
 // 블로그 포스트 업데이트
 export async function updateBlogPost(id: number, { title, content, thumbnail }: { title: string; content: string; thumbnail:string  }) {
-  const supabase = createClient_cl();
+
   await checkAdminOrThrow();
 
   const { data, error: updateError } = await supabase
@@ -154,7 +153,7 @@ export async function updateBlogPost(id: number, { title, content, thumbnail }: 
 
 // 블로그 포스트 삭제
 export async function deleteBlogPost(id: number) {
-  const supabase = createClient_cl();
+
   await checkAdminOrThrow();
 
   const { error: deleteError } = await supabase

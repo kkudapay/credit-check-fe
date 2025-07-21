@@ -8,11 +8,11 @@ import { getBlogPosts, deleteBlogPost, deleteImageFromSupabase, type BlogPost } 
 import { formatDate, isNewPost } from '@/lib/format-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import DOMPurify from 'dompurify';
-import { createClient } from '@/lib/supabaseClient';
+import supabase from '@/lib/supabaseClient';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
 import {extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
-import defaultThumbnail from '@/src/image/blog_thumbnail.png';
+import defaultThumbnail from '@/public/image/blog_thumbnail.png';
 import { isCurrentSessionAdmin } from '@/lib/auth-utils';
 
 export default function BlogPage() {

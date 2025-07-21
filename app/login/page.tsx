@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 
-import { createClient } from '@/lib/supabaseClient'
+import supabase from '@/lib/supabaseClient'
 import { login } from '@/lib/auth-utils';
 
 import { toast } from 'sonner';
@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const router = useRouter();
-  const supabase = createClient()
+  
 
 
   const handleLogin = async () => {

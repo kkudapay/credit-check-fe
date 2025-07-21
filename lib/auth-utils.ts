@@ -1,8 +1,7 @@
 'use client';
 
-import { createClient } from './supabaseClient';
+import supabase from './supabaseClient';
 
-const supabase = createClient();
 
 // 로그인 함수
 export async function login(email: string, password: string) {

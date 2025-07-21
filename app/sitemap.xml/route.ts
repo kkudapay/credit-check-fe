@@ -1,5 +1,7 @@
 import sitemap from '@/lib/sitemap';
 
+export const dynamic = 'force-dynamic';
+
 // app/sitemap.xml/route.ts
 export async function GET() {
   const _sitemap = await sitemap();

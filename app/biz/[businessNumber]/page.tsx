@@ -286,28 +286,30 @@ export default function CompanyDetailPage() {
             <div className="bg-white rounded-lg p-4 border border-gray-200 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업자등록번호</span>
-                <span className="font-medium">{formatBusinessNumber(companyData.businessNumber)}</span>
+                {/* <span className="font-medium">{formatBusinessNumber(companyData.businessNumber)}</span> */}
+                <span className="font-medium max-w-[50%] text-right">아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자</span>
+                
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">납세자상태</span>
-                <span className="font-medium">{companyData.taxpayerStatus}</span>
+                <span className="font-medium max-w-[50%] text-right" >{companyData.taxpayerStatus}</span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">과세유형</span>
-                <span className="font-medium">{companyData.taxType || '일반과세자'}</span>
+                <span className="font-medium max-w-[50%] text-right">{companyData.taxType || '일반과세자'}</span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업유형</span>
-                <span className="font-medium">{companyData.businessType}</span>
+                <span className="font-medium max-w-[50%] text-right">{companyData.businessType}</span>
               </div>
 
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">법인등록번호</span>
-                <span className="font-medium">
+                <span className="font-medium max-w-[50%] text-right">
                   {companyData.corporateNumber
                     ? `${companyData.corporateNumber}`
                     : '-'}
@@ -317,7 +319,7 @@ export default function CompanyDetailPage() {
 
               <div className="flex items-start justify-between">
                 <span className="text-gray-700">주소</span>
-                <span className="font-medium text-right max-w-[200px]">
+                <span className="font-medium max-w-[50%] text-right">
                   {companyData.address
                     ? `${companyData.address}`
                     : '-'}
@@ -327,7 +329,7 @@ export default function CompanyDetailPage() {
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">폐업일</span>
-                <span className="font-medium">
+                <span className="font-medium max-w-[50%] text-right">
                   {companyData.closureDate
                     ? `${format_date(companyData.closureDate)}`
                     : '-'}

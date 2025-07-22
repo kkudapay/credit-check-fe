@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import purifier from '@/lib/purifier';
+
 import { uploadImageToSupabase, deleteImageFromSupabase } from '@/lib/blog-utils'
 import { getCurrentSession, logout } from '@/lib/auth-utils';
 import { toast } from 'sonner';
@@ -27,22 +28,6 @@ interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
   placeholder?: string;
-}
-
-function isHtmlEquivalent(html1: string, html2: string): boolean {
-  const parser = new DOMParser();
-
-  const doc1 = parser.parseFromString(html1, 'text/html');
-  const doc2 = parser.parseFromString(html2, 'text/html');
-
-  return doc1.body.isEqualNode(doc2.body);
-}
-
-function checkIfSanitized(originalHtml: string): boolean {
-  const sanitized = purifier(originalHtml);
-  console.log("전: ", originalHtml)
-  console.log("후: ", sanitized )
-  return isHtmlEquivalent(originalHtml, sanitized);
 }
 
 const finalImageURLs: string[] = [];
@@ -112,6 +97,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   
 
   const handleCommand = (command: string, value?: string) => {
+    
     document.execCommand(command, false, value);
     updateContent();
   };
@@ -129,6 +115,8 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
       onChange(clean);
     }
   };
+
+  
 
   const handleFontSize = (size: string) => {
     handleCommand('fontSize', size);
@@ -440,6 +428,14 @@ const handleAltChange = (index: number, newAlt: string) => {
           }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+
+          onPaste={(e) => {
+            e.preventDefault(); // 기본 붙여넣기 막기
+            const text = e.clipboardData.getData("text/plain"); // 순수 텍스트만 가져오기
+
+            // 커서 위치에 텍스트 삽입
+            document.execCommand("insertText", false, text);
+          }}
           /*
           onMouseDown={() => {
             // 포커스 이동 전에 현재 커서 위치 저장
@@ -615,20 +611,13 @@ const handleAltChange = (index: number, newAlt: string) => {
               <Button
                 onClick={() => {
                   if (!editorRef.current) return;
-                  {if (checkIfSanitized(htmlInput)) {
-                    toast.error('코드에 작성 불가능한 요소가 포함되어 있거나, 형식이 불완전합니다.', {
-                      duration: 4000,
-                    });
-
-                    return;
-                  }}
                   
                   editorRef.current.focus();
                   handleCommand('insertHTML', purifier(htmlInput));
                   setShowHtmlDialog(false);
                   setHtmlInput('');
 
-                  toast.info('위험요소가 있는 코드는 자동으로 삭제됐을 수 있습니다. (ex. 링크, 이미지)', {
+                  toast.info('위험요소가 있는 코드는 자동으로 삭제됐을 수 있습니다.', {
                       duration: 5000,
                     });
                 }}

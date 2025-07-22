@@ -167,17 +167,10 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     anchor.appendChild(savedRange.extractContents());
     savedRange.insertNode(anchor);
 
-
-
-
     const newRange = document.createRange();
     newRange.selectNode(anchor);
 
-
-
-
     updateContent();
-
 
     setLinkUrl('');
     setShowLinkDialog(false);
@@ -187,6 +180,46 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   };
 
+  const openHtmlDialog = () => {
+    const selection = window.getSelection();
+    if (
+      selection &&
+      selection.rangeCount > 0
+    ) {
+      const range = selection.getRangeAt(0);
+      
+      setSavedRange(range);
+      setShowHtmlDialog(true);
+    } else {
+   
+      return;
+    }
+  };
+
+  const insertHtml = () => {
+    if (!savedRange || !editorRef.current) return;
+
+    const selection = window.getSelection();
+    if (selection && savedRange) {
+      selection.removeAllRanges();
+      selection.addRange(savedRange);
+    }
+    handleCommand('insertHTML', purifier(htmlInput));
+                  setShowHtmlDialog(false);
+                  setHtmlInput('');
+
+    toast.info('위험요소가 있는 코드는 자동으로 삭제됐을 수 있습니다.', {
+                      duration: 5000,
+                    });
+
+    updateContent();
+
+    setShowHtmlDialog(false);
+    setHtmlInput('');
+    setSavedRange(null);
+
+
+  };
 
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -399,7 +432,7 @@ const handleAltChange = (index: number, newAlt: string) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowHtmlDialog(true)}
+              onClick={openHtmlDialog}
               className="h-8 w-8 p-0"
             >
               {'</>'}
@@ -609,28 +642,19 @@ const handleAltChange = (index: number, newAlt: string) => {
             />
             <div className="flex space-x-2 mt-4">
               <Button
-                onClick={() => {
-                  if (!editorRef.current) return;
+                
+                  //if (!editorRef.current) return;
+                  onClick={insertHtml}
+                  //editorRef.current.focus();
                   
-                  editorRef.current.focus();
-                  handleCommand('insertHTML', purifier(htmlInput));
-                  setShowHtmlDialog(false);
-                  setHtmlInput('');
-
-                  toast.info('위험요소가 있는 코드는 자동으로 삭제됐을 수 있습니다.', {
-                      duration: 5000,
-                    });
-                }}
+                
                 className="flex-1 bg-orange-500 hover:bg-orange-600"
               >
                 삽입
               </Button>
               <Button
                 variant="outline"
-                onClick={() => {
-                  setShowHtmlDialog(false);
-                  setHtmlInput('');
-                }}
+                onClick={() => {setHtmlInput(''); setShowHtmlDialog(false);}}
                 className="flex-1"
               >
                 취소

@@ -146,6 +146,14 @@ export default function HamburgerWithSidebar() {
             >
               블로그
             </Link>
+
+            <Link 
+              href="/caculator/installment"
+              className="block text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              할부이자 계산기
+            </Link>
           </nav>
         </div>
       </div>

@@ -196,14 +196,14 @@ export default function CompanyDetailPage() {
           <div>
             <div className="flex items-center mb-3">
               <h2 className="text-lg font-semibold text-gray-900 mr-2">연체 정보</h2>
-
-              {companyData.overdueInfo.hasOverdue && (<button
+{/* {companyData.overdueInfo.hasOverdue && (<button
                 onClick={() => { handleClick_GTM(); setShowGraph(!showGraph); }}
                 className="text-gray-600 hover:text-gray-800"
                 data-gtm-id="overdue_detail"
               >
                 <ChevronRight className="w-5 h-5" />
-              </button>)}
+              </button>)} */}
+              
             </div>
 
 

@@ -286,8 +286,8 @@ export default function CompanyDetailPage() {
             <div className="bg-white rounded-lg p-4 border border-gray-200 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업자등록번호</span>
-                {/* <span className="font-medium">{formatBusinessNumber(companyData.businessNumber)}</span> */}
-                <span className="font-medium max-w-[50%] text-right">아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자아주긴글자</span>
+                <span className="font-medium">{formatBusinessNumber(companyData.businessNumber)}</span>
+                
                 
               </div>
 

@@ -35,8 +35,8 @@ export interface OverdueData {
     hasOverdue: boolean;
     totalAmount: number;
     overdueCount: number;
-    firstOverdueDate?: string;
-    lastOverdueDate?: string;
+    firstOverdueDate: number;
+    lastOverdueDate: number;
   };
   lastUpdated: string;
 }
@@ -94,6 +94,7 @@ export async function searchCompanies(input: string) {
 export async function getTotalData(bizNumber: string): Promise<(BusinessData & OverdueData) | null> {
 
   try {
+    
           if (bizNumber.length !== 10) {
     throw new Error(`잘못된 사업자 정보가 입력됐습니다. ${bizNumber}`);
   }
@@ -139,7 +140,6 @@ export async function getBusinessData(bizNumber: string): Promise<BusinessData |
     if (!company) return null;
 
 
-console.log(company);
     const mappedData: BusinessData = {
       businessNumber: company.bno ?? "",
       taxpayerStatus: company.b_stt ?? "",
@@ -161,14 +161,47 @@ console.log(company);
 //연체 정보 반환 함수
 export async function getOverdueData(bizNumber: string): Promise<OverdueData | null> {
   // 실제 API가 만들어지기 전까지는 임시값 반환
-  return {
-    overdueInfo: {
-      hasOverdue: false,
-      totalAmount: 0,
-      overdueCount: 0,
-      firstOverdueDate: '0000-00-00',
-      lastOverdueDate: '0000-00-00',
-    },
-    lastUpdated: new Date().toISOString(),
-  };
+  
+  
+  try {
+    const res = await fetch('https://api-credit.kkuda.kr/api/v1/client/kcb/credit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        bsn:bizNumber,
+      }),
+    })
+
+    const json = await res.json()
+
+    const seg850 = json?.data?.seg850RspLst;
+    if (!seg850 ) return null;
+    
+
+    const hasOverdue = Number(seg850[0].profRsltVal);
+    const totalAmount = Number(seg850[0].profRsltVal);
+    const overdueCount = Number(seg850[1].profRsltVal);
+    const lastOverdueDate = Number(seg850[2].profRsltVal);
+    const firstOverdueDate = Number(seg850[3].profRsltVal);
+    
+
+    const mappedData: OverdueData = {
+      overdueInfo: {
+      hasOverdue: hasOverdue == 0 ? false : true,
+      totalAmount: totalAmount ?? "",
+      overdueCount: overdueCount ?? "",
+      lastOverdueDate: lastOverdueDate ?? "",
+      firstOverdueDate: firstOverdueDate ?? "", // 오타 주의
+      }, lastUpdated: new Date().toISOString(),
+    };
+
+    return mappedData;
+  } catch (error) {
+    console.error("에러 발생:", error);
+    return null;
+  }
+  
+ 
 }

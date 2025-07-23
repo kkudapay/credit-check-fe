@@ -1,7 +1,7 @@
 //로그인 페이지
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,22 +10,51 @@ import Link from 'next/link';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 
 import supabase from '@/lib/supabaseClient'
-import { login } from '@/lib/auth-utils';
+import { login, logout } from '@/lib/auth-utils';
 
 import { toast } from 'sonner';
 
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
 
+import { getCurrentSession } from '@/lib/auth-utils';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const router = useRouter();
-  
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
+
+  useEffect(() => {
+  
+      const checkSession = async () => {
+        const session = await getCurrentSession();
+        setIsLoggedIn(!!session);
+      };
+  
+      checkSession();
+    }, []);
+  
+    useEffect(() => {
+  
+      if (isLoggedIn === null) return; // 세션 확인 아직 안 끝났으면 아무것도 안함
+  
+      if (isLoggedIn) {
+        setIsLoading(false);
+        return;
+      }
+
+      if (!isLoggedIn) {
+        setIsLoading(false);
+        return;
+      }
+  
+  
+    }, [isLoggedIn]);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -74,6 +103,31 @@ export default function LoginPage() {
     router.push('/biz')
   };
 
+  // 로그아웃 처리
+    const handleLogout = async () => {
+    try {
+      const { error } = await logout();
+  
+      if (error) {
+        toast.error('로그아웃 중 오류가 발생했습니다.');
+        console.error('Logout Error:', error.message);
+        return;
+      }
+  
+      setIsLoggedIn(false);
+      
+      toast.info('정상적으로 로그아웃 되었습니다.', {
+        duration: 2000,
+      });
+  
+      router.push('/biz');
+      router.refresh();
+    } catch (err) {
+      console.error('Unexpected Logout Error:', err);
+      toast.error('예상치 못한 오류가 발생했습니다.');
+    }
+  };
+
 
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -86,6 +140,49 @@ export default function LoginPage() {
     router.push('/biz');
   };
 
+
+  if (isLoggedIn) {
+      return (
+        <div>
+          <HamburgerWithSidebar />
+          <div className="min-h-screen">
+          <KkudaHeader />
+  
+          <div className="mobile-container min-h-[calc(150vh/2)] flex flex-col items-center justify-center">
+            <div className="text-center py-5">
+              <p className="text-gray-600 text-lg">
+                이미 로그인되어 있습니다.
+              </p>
+            </div>
+            <div className="text-center">
+                <p className="text-orange-500 hover:text-orange-600 font-medium cursor-pointer" onClick={handleLogout}>
+                   로그아웃 할까요?
+                  
+                </p>
+              </div>
+          </div>
+          </div>
+          
+          <KkudaFooter/>
+        </div>
+      );
+    }
+
+    if (isLoading) {
+        return (
+          <div>
+            <HamburgerWithSidebar />
+    
+    
+            <div className="flex items-center justify-center h-screen">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">로딩중...</p>
+              </div>
+            </div>
+          </div>
+        );
+      }
 
 
   return (

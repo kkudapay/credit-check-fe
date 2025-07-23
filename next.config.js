@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   img-src 'self' data: https://amexdwsazbwkgtbupovh.supabase.co https://www.google-analytics.com https://www.googletagmanager.com;
   font-src 'self' https://fonts.gstatic.com;
-  connect-src 'self' https://amexdwsazbwkgtbupovh.supabase.co https://api-credit.kkuda.kr https://www.google-analytics.com;
+  connect-src 'self' https://amexdwsazbwkgtbupovh.supabase.co https://api-credit.kkuda.kr https://api-credit.kkuda.kr/api/v1/client/kcb/credit https://www.google-analytics.com;
   frame-src https://www.googletagmanager.com;
 `;
 
@@ -53,8 +53,8 @@ const nextConfig = {
 
 module.exports = nextConfig;
 
-/*
 
+/*
 const nextConfig = {
   //output: 'export',
   eslint: {

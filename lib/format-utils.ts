@@ -1,21 +1,25 @@
 //연체 정보 포맷하는 함수 담은 파일. 나중에 백엔드로 넘길것.
 
-export function formatCurrency(amount: number): string {
-  if (amount >= 100000000) {
-    const billions = Math.floor(amount / 100000000);
-    const remainder = amount % 100000000;
-    if (remainder === 0) {
-      return `${billions}억원`;
-    } else {
-      const millions = Math.floor(remainder / 10000);
-      return `${billions}억 ${millions}만원`;
-    }
-  } else if (amount >= 10000) {
-    return `${Math.floor(amount / 10000)}만원`;
-  } else {
-    return `${amount.toLocaleString()}원`;
-  }
+export function formatCurrency(value: number): string {
+  
+  if (value === 0) return "0원"
+
+  const units = ["천", "만", "십만", "백만", "천만", "억", "십억", "백억", "천억", "조"]
+  const str = value.toString()
+  const len = str.length
+  
+
+  let unitIndex = len - 1 // 자릿수에 따라 단위 결정
+  if (unitIndex < 0) return "0원"
+
+  const firstDigit = str[0]
+  const unit = units[unitIndex] ?? ""
+ 
+
+  return `${firstDigit}${unit}원`
 }
+
+
 
 export function calculateDaysAgo(date: string): number {
   const targetDate = new Date(date);

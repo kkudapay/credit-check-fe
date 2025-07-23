@@ -18,7 +18,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import DOMPurify from 'dompurify';
+import purifier from '@/lib/purifier';
+
 import { uploadImageToSupabase, deleteImageFromSupabase } from '@/lib/blog-utils'
 import { getCurrentSession, logout } from '@/lib/auth-utils';
 import { toast } from 'sonner';
@@ -27,11 +28,6 @@ interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
   placeholder?: string;
-}
-
-function checkIfSanitized(originalHtml: string): boolean {
-  const sanitized = DOMPurify.sanitize(originalHtml);
-  return sanitized !== originalHtml;
 }
 
 const finalImageURLs: string[] = [];
@@ -93,7 +89,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   useEffect(() => {
     if (editorRef.current && !isFocused && content && editorRef.current.innerHTML !== content) {
-      const clean = DOMPurify.sanitize(content);
+      const clean = purifier(content);
       editorRef.current.innerHTML = clean;
     }
   }, [content, isFocused]);
@@ -101,6 +97,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   
 
   const handleCommand = (command: string, value?: string) => {
+    
     document.execCommand(command, false, value);
     updateContent();
   };
@@ -108,7 +105,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   const updateContent = () => {
     if (editorRef.current) {
       const before = editorRef.current.innerHTML;
-      const clean = DOMPurify.sanitize(before);
+      const clean = purifier(before);
 
       if (clean.length > MAX_HTML_LENGTH) {
         alert(`글이 너무 깁니다. ${MAX_HTML_LENGTH}자 이내로 작성해주세요.`);
@@ -118,6 +115,8 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
       onChange(clean);
     }
   };
+
+  
 
   const handleFontSize = (size: string) => {
     handleCommand('fontSize', size);
@@ -168,17 +167,10 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     anchor.appendChild(savedRange.extractContents());
     savedRange.insertNode(anchor);
 
-
-
-
     const newRange = document.createRange();
     newRange.selectNode(anchor);
 
-
-
-
     updateContent();
-
 
     setLinkUrl('');
     setShowLinkDialog(false);
@@ -188,6 +180,46 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   };
 
+  const openHtmlDialog = () => {
+    const selection = window.getSelection();
+    if (
+      selection &&
+      selection.rangeCount > 0
+    ) {
+      const range = selection.getRangeAt(0);
+      
+      setSavedRange(range);
+      setShowHtmlDialog(true);
+    } else {
+   
+      return;
+    }
+  };
+
+  const insertHtml = () => {
+    if (!savedRange || !editorRef.current) return;
+
+    const selection = window.getSelection();
+    if (selection && savedRange) {
+      selection.removeAllRanges();
+      selection.addRange(savedRange);
+    }
+    handleCommand('insertHTML', purifier(htmlInput));
+                  setShowHtmlDialog(false);
+                  setHtmlInput('');
+
+    toast.info('위험요소가 있는 코드는 자동으로 삭제됐을 수 있습니다.', {
+                      duration: 5000,
+                    });
+
+    updateContent();
+
+    setShowHtmlDialog(false);
+    setHtmlInput('');
+    setSavedRange(null);
+
+
+  };
 
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -400,7 +432,7 @@ const handleAltChange = (index: number, newAlt: string) => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowHtmlDialog(true)}
+              onClick={openHtmlDialog}
               className="h-8 w-8 p-0"
             >
               {'</>'}
@@ -429,6 +461,14 @@ const handleAltChange = (index: number, newAlt: string) => {
           }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+
+          onPaste={(e) => {
+            e.preventDefault(); // 기본 붙여넣기 막기
+            const text = e.clipboardData.getData("text/plain"); // 순수 텍스트만 가져오기
+
+            // 커서 위치에 텍스트 삽입
+            document.execCommand("insertText", false, text);
+          }}
           /*
           onMouseDown={() => {
             // 포커스 이동 전에 현재 커서 위치 저장
@@ -602,31 +642,19 @@ const handleAltChange = (index: number, newAlt: string) => {
             />
             <div className="flex space-x-2 mt-4">
               <Button
-                onClick={() => {
-                  if (!editorRef.current) return;
-                  {/*if (checkIfSanitized(htmlInput)) {
-                    toast.error('코드에 작성 불가능한 요소가 포함되어 있거나, 형식이 불완전합니다.', {
-                      duration: 4000,
-                    });
-
-                    return;
-                  }*/}
+                
+                  //if (!editorRef.current) return;
+                  onClick={insertHtml}
+                  //editorRef.current.focus();
                   
-                  editorRef.current.focus();
-                  handleCommand('insertHTML', DOMPurify.sanitize(htmlInput));
-                  setShowHtmlDialog(false);
-                  setHtmlInput('');
-                }}
+                
                 className="flex-1 bg-orange-500 hover:bg-orange-600"
               >
                 삽입
               </Button>
               <Button
                 variant="outline"
-                onClick={() => {
-                  setShowHtmlDialog(false);
-                  setHtmlInput('');
-                }}
+                onClick={() => {setHtmlInput(''); setShowHtmlDialog(false);}}
                 className="flex-1"
               >
                 취소

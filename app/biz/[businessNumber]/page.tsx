@@ -196,21 +196,21 @@ export default function CompanyDetailPage() {
           <div>
             <div className="flex items-center mb-3">
               <h2 className="text-lg font-semibold text-gray-900 mr-2">연체 정보</h2>
-
-              {companyData.overdueInfo.hasOverdue && (<button
+{/* {companyData.overdueInfo.hasOverdue && (<button
                 onClick={() => { handleClick_GTM(); setShowGraph(!showGraph); }}
                 className="text-gray-600 hover:text-gray-800"
                 data-gtm-id="overdue_detail"
               >
                 <ChevronRight className="w-5 h-5" />
-              </button>)}
+              </button>)} */}
+              
             </div>
 
 
 
 
             <div className="relative ">
-              <div className="relative border-gray-100 blur-sm select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
+              <div className="relative border-gray-100 select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   {/*연체 유무*/}
                   <span className="text-gray-700">연체 유무</span>
@@ -248,7 +248,7 @@ export default function CompanyDetailPage() {
                     <span className="font-semibold">
                       {companyData.overdueInfo.hasOverdue &&
                         companyData.overdueInfo.lastOverdueDate
-                        ? `${calculateDaysAgo(companyData.overdueInfo.lastOverdueDate)}일`
+                        ? `${companyData.overdueInfo.lastOverdueDate}일`
                         : '-'}
                     </span>
                   </div>
@@ -260,7 +260,7 @@ export default function CompanyDetailPage() {
                     <span className="font-semibold">
                       {companyData.overdueInfo.hasOverdue &&
                         companyData.overdueInfo.firstOverdueDate
-                        ? `${calculateDaysAgo(companyData.overdueInfo.firstOverdueDate)}일`
+                        ? `${companyData.overdueInfo.firstOverdueDate}일`
                         : '-'}
                     </span>
                   </div>
@@ -273,10 +273,7 @@ export default function CompanyDetailPage() {
               </div>
 
 
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <h2 className="text-lg font-semibold text-red-600 text-center">연체정보 조회 서비스는 곧 오픈됩니다.
-                </h2>
-              </div>
+              
             </div>
           </div>
 
@@ -287,27 +284,29 @@ export default function CompanyDetailPage() {
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업자등록번호</span>
                 <span className="font-medium">{formatBusinessNumber(companyData.businessNumber)}</span>
+                
+                
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">납세자상태</span>
-                <span className="font-medium">{companyData.taxpayerStatus}</span>
+                <span className="font-medium max-w-[50%] text-right" >{companyData.taxpayerStatus}</span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">과세유형</span>
-                <span className="font-medium">{companyData.taxType || '일반과세자'}</span>
+                <span className="font-medium max-w-[50%] text-right">{companyData.taxType || '일반과세자'}</span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업유형</span>
-                <span className="font-medium">{companyData.businessType}</span>
+                <span className="font-medium max-w-[50%] text-right">{companyData.businessType}</span>
               </div>
 
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">법인등록번호</span>
-                <span className="font-medium">
+                <span className="font-medium max-w-[50%] text-right">
                   {companyData.corporateNumber
                     ? `${companyData.corporateNumber}`
                     : '-'}
@@ -317,7 +316,7 @@ export default function CompanyDetailPage() {
 
               <div className="flex items-start justify-between">
                 <span className="text-gray-700">주소</span>
-                <span className="font-medium text-right max-w-[200px]">
+                <span className="font-medium max-w-[50%] text-right">
                   {companyData.address
                     ? `${companyData.address}`
                     : '-'}
@@ -327,7 +326,7 @@ export default function CompanyDetailPage() {
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">폐업일</span>
-                <span className="font-medium">
+                <span className="font-medium max-w-[50%] text-right">
                   {companyData.closureDate
                     ? `${format_date(companyData.closureDate)}`
                     : '-'}

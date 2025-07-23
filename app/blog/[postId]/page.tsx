@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { getBlogPost, deleteBlogPost, deleteImageFromSupabase, type BlogPost } from '@/lib/blog-utils';
 import { formatDate, isNewPost } from '@/lib/format-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
-import DOMPurify from 'dompurify';
+import purifier from '@/lib/purifier';
 import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
@@ -233,7 +233,7 @@ const [isAdmin, setIsAdmin] = useState(false);
             <div className="p-6">
               <div
                 className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+                dangerouslySetInnerHTML={{ __html: purifier(post.content) }}
               />
             </div>
           </article>

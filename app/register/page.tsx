@@ -24,7 +24,7 @@ export default function registerPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [errors, setErrors] = useState<{
     name?: string;
@@ -35,7 +35,7 @@ export default function registerPage() {
   const router = useRouter();
 
   useEffect(() => {
-
+    
     const checkSession = async () => {
       const session = await getCurrentSession();
       setIsLoggedIn(!!session);
@@ -52,7 +52,10 @@ export default function registerPage() {
       setIsLoading(false);
       return;
     }
-
+if (!isLoggedIn) {
+        setIsLoading(false);
+        return;
+      }
 
   }, [isLoggedIn]);
 
@@ -144,6 +147,21 @@ export default function registerPage() {
       formData.password === formData.confirmPassword;
   };
 
+  if (isLoading) {
+    return (
+      <div>
+        <HamburgerWithSidebar />
+
+
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">로딩중...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return (
@@ -165,21 +183,7 @@ export default function registerPage() {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div>
-        <HamburgerWithSidebar />
-
-
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">로딩중...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
 
   return (

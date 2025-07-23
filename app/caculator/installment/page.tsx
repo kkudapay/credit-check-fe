@@ -97,7 +97,7 @@ export default function InstallmentCalculatorPage() {
                 <KkudaHeader />
 
                 {/* Content */}
-                <div className="mobile-container py-6 space-y-6 ">
+                <div className="max-w-4xl mx-auto p-6 space-y-8 ">
                     
                     {/* Page Title */}
                     <div className="flex items-center space-x-3 pt-6">
@@ -109,7 +109,7 @@ export default function InstallmentCalculatorPage() {
                     <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label htmlFor="loanAmount" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label htmlFor="loanAmount" className="block text-xl font-medium text-gray-700 mb-2">
                                     상품금액(원)
                                 </label>
                                 <input
@@ -123,7 +123,7 @@ export default function InstallmentCalculatorPage() {
                             </div>
 
                             <div>
-                                <label htmlFor="annualInterestRate" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label htmlFor="annualInterestRate" className="block text-xl font-medium text-gray-700 mb-2">
                                     연이율(%)
                                 </label>
                                 <input
@@ -133,12 +133,12 @@ export default function InstallmentCalculatorPage() {
                                     onChange={(e) => setAnnualInterestRate(e.target.value)}
                                     step="0.1"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                    placeholder="예: 12.5"
+                                    placeholder="예: 2.5"
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="loanTerm" className="block text-sm font-medium text-gray-700 mb-2">
+                                <label htmlFor="loanTerm" className="block text-xl font-medium text-gray-700 mb-2">
                                     상환기간(개월)
                                 </label>
                                 <input

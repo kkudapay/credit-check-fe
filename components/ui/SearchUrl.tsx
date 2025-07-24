@@ -25,6 +25,9 @@ export default function SearchUrl({ searchQuery, onChange }: SearchUrlProps) {
 
 
     const searchUrlPath = () => {
+        if (searchQuery == ''){ 
+            setSearchResults([])
+            return;}
         const raw = window.sessionStorage.getItem('url_path_search');
         const cache = raw ? JSON.parse(raw) : {};
         if (cache && cache['result']) {

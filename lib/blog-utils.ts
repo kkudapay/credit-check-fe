@@ -8,6 +8,7 @@ export interface BlogPost {
   createdAt: string;
   updatedAt: string;
   thumbnail: string;
+  urlPath: string;
 }
 
 //DB에 이미지 업로드
@@ -86,6 +87,18 @@ export async function getBlogPost(id: number) {
   return data;
 }
 
+export async function getBlogPostByUrl(urlPath: string) {
+
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('urlPath', urlPath)
+    .single();
+
+  if (error) throw error;
+  return data ?? null;
+}
+
 
 
 export async function checkAdminOrThrow() {
@@ -107,21 +120,21 @@ export async function checkAdminOrThrow() {
 
 
 // 블로그 포스트 생성
-export async function createBlogPost({ title, content, thumbnail }: { title: string; content: string; thumbnail:string }) {
+export async function createBlogPost({ title, content, thumbnail, urlPath }: { title: string; content: string; thumbnail:string; urlPath:string }) {
  
   const userId = await checkAdminOrThrow();
 
   if (thumbnail!= null){
     const { data, error: insertError } = await supabase
     .from('blog_posts')
-    .insert([{ title, content, userId, thumbnail }]);
+    .insert([{ title, content, userId, thumbnail, urlPath }]);
 
   if (insertError) throw insertError;
   return data;
   } else{
     const { data, error: insertError } = await supabase
     .from('blog_posts')
-    .insert([{ title, content, userId }]);
+    .insert([{ title, content, userId, urlPath }]);
 
   if (insertError) throw insertError;
   return data;
@@ -131,7 +144,7 @@ export async function createBlogPost({ title, content, thumbnail }: { title: str
 
 
 // 블로그 포스트 업데이트
-export async function updateBlogPost(id: number, { title, content, thumbnail }: { title: string; content: string; thumbnail:string  }) {
+export async function updateBlogPost(id: number, { title, content, thumbnail, urlPath }: { title: string; content: string; thumbnail:string; urlPath:string  }) {
 
   await checkAdminOrThrow();
 
@@ -142,6 +155,7 @@ export async function updateBlogPost(id: number, { title, content, thumbnail }: 
       content,
       thumbnail,
       updatedAt: new Date().toISOString(),
+      urlPath,
     })
     .eq('id', id);
 
@@ -162,4 +176,29 @@ export async function deleteBlogPost(id: number) {
     .eq('id', id);
 
   if (deleteError) throw deleteError;
+}
+
+
+export async function showSearchedUrlPath(query: string) {
+const { data, error } = await supabase
+  .from('blog_posts')
+  .select('urlPath')
+  .ilike('urlPath', `%${query}%`)
+  .order('createdAt', { ascending: false });
+
+if (error) throw error;
+
+return data?.map((item) => item.urlPath) ?? [];
+}
+
+export async function showAllUrlPath() {
+
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('urlPath')
+    .order('createdAt', { ascending: false });
+
+  if (error) throw error;
+  return data.map((item) => item.urlPath) ?? [];
+
 }

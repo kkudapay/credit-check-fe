@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, Trash2, Calendar, User, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getBlogPost, deleteBlogPost, deleteImageFromSupabase, type BlogPost } from '@/lib/blog-utils';
+import { getBlogPost, deleteBlogPost, deleteImageFromSupabase, getBlogPostByUrl, type BlogPost } from '@/lib/blog-utils';
 import { formatDate, isNewPost } from '@/lib/format-utils';
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar';
 import purifier from '@/lib/purifier';
@@ -22,8 +22,9 @@ export default function BlogPostPage() {
   //const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [notFound, setNotFound] = useState(false);
 const [isAdmin, setIsAdmin] = useState(false);
-  const postId = Number(params.postId);
-
+  
+const urlPath = params.urlPath;
+const safeUrlPath = Array.isArray(urlPath) ? urlPath[0] : urlPath;
   /*
   // 로그인 여부 확인
   useEffect(() => {
@@ -64,7 +65,7 @@ const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
       const timer = setTimeout(() => {
       const fetchPost = async () => {
-        const blogPost = await getBlogPost(postId);
+        const blogPost = await getBlogPostByUrl(safeUrlPath);
         if (blogPost) {
           setPost(blogPost);
         } else {
@@ -97,19 +98,20 @@ const [isAdmin, setIsAdmin] = useState(false);
   };
 
   const handleEdit = () => {
-    router.push(`/blog/edit/${postId}`);
+    if (post)
+    router.push(`/blog/edit/${post.id}`);
   };
 
-  const handleDelete = async () => {
-    if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
-      if (post) {
+  const handleDelete = async () => { 
+    if (confirm('정말로 이 게시글을 삭제하시겠습니까?') && post) {
+      
         const usedImages = extractImageUrlsFromContent(post.content);
         for (const url of usedImages) {
           await deleteImageFromSupabase(url);
-        }
+       
       }
       
-      await deleteBlogPost(postId);
+      await deleteBlogPost(post.id);
       router.push('/blog');
     }
   };

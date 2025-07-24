@@ -48,9 +48,9 @@ export default function BlogPage() {
     router.push('/biz');
   };
 
-  const handlePostClick = (postId: number) => {
+  const handlePostClick = (urlPath: string) => {
     
-        router.push(`/blog/${postId}`);
+        router.push(`/blog/${urlPath}`);
     };
 
   const handleCreatePost = () => {
@@ -146,7 +146,7 @@ export default function BlogPage() {
                                 <div
                                     key={post.id}
                                     className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
-                                    onClick={() => handlePostClick(post.id)}
+                                    onClick={() => handlePostClick(post.urlPath)}
                                 >
                                     {/* Thumbnail */}
                                     <div className="relative">

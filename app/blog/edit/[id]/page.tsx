@@ -92,7 +92,7 @@ const isValidUrlPath = (value: string) => {
     if (cache && cache['result']) {
       const filteredNonNull = (cache['result'] ?? []).filter((item: string) => item !== null);
       const filteredResults = filteredNonNull.filter((item: string) =>
-        item.includes(urlPath)
+        item === urlPath 
       );
       return filteredResults.length > 0;
 
@@ -101,7 +101,7 @@ const isValidUrlPath = (value: string) => {
       if (result) {
         const filteredNonNull = (result ?? []).filter((item: string) => item !== null);
         const filteredResults = filteredNonNull.filter((item: string) =>
-          item.includes(urlPath)
+          item === urlPath 
         );
         cache['result'] = result;
         window.sessionStorage.setItem('url_path_search', JSON.stringify(cache));

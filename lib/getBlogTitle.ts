@@ -1,5 +1,5 @@
-export async function getBlogTitle(id: number) {
-  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/blog_titles?postId=eq.${id}&select=title`;
+export async function getBlogTitle(urlPath: string) {
+  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/blog_titles?urlPath=eq.${urlPath}&select=title`;
 
   const res = await fetch(url, {
     headers: {

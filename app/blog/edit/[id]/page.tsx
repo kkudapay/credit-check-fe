@@ -11,6 +11,9 @@ import { getCurrentSession } from '@/lib/auth-utils';
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
 import {RichTextEditor, deleteUnusedURLs, extractImageUrlsFromContent} from '@/components/ui/rich-text-editor';
+import SearchUrl from '@/components/ui/SearchUrl';
+import { toast } from 'sonner';
+import { showAllUrlPath, showSearchedUrlPath } from '@/lib/blog-utils';
 
 export default function EditBlogPage() {
   const params = useParams();
@@ -23,6 +26,7 @@ export default function EditBlogPage() {
   const [notFound, setNotFound] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [initialURLS, setinitialURLS] = useState<string[]>([]);
+const [urlPath, seturlPath] = useState('');
 
 
   const postId = Number(params.id);
@@ -52,6 +56,7 @@ export default function EditBlogPage() {
           setPost(blogPost);
           setTitle(blogPost.title);
           setContent(blogPost.content);
+          seturlPath(blogPost.urlPath);
           const temp = extractImageUrlsFromContent(blogPost.content);
           setinitialURLS(temp);
         } else {
@@ -66,7 +71,10 @@ export default function EditBlogPage() {
     return () => clearTimeout(timer);
   }, [isLoggedIn, postId]);
 
-
+const isValidUrlPath = (value: string) => {
+  const regex = /^[a-zA-Z0-9-_\.]+$/;
+  return regex.test(value);
+};
 
 
   const handleBack = () => {
@@ -77,6 +85,34 @@ export default function EditBlogPage() {
     router.push('/biz');
   };
 
+  const isUrlSame = async () => {
+    const raw = window.sessionStorage.getItem('url_path_search');
+    const cache = raw ? JSON.parse(raw) : {};
+
+    if (cache && cache['result']) {
+      const filteredNonNull = (cache['result'] ?? []).filter((item: string) => item !== null);
+      const filteredResults = filteredNonNull.filter((item: string) =>
+        item.includes(urlPath)
+      );
+      return filteredResults.length > 0;
+
+    } else {
+      const result = await showAllUrlPath();
+      if (result) {
+        const filteredNonNull = (result ?? []).filter((item: string) => item !== null);
+        const filteredResults = filteredNonNull.filter((item: string) =>
+          item.includes(urlPath)
+        );
+        cache['result'] = result;
+        window.sessionStorage.setItem('url_path_search', JSON.stringify(cache));
+        return filteredResults.length > 0;
+      }
+      return false;
+
+    }
+
+  };
+
   const handleSave = async () => {
     if (!title.trim()) {
       alert('제목을 입력해주세요.');
@@ -85,6 +121,17 @@ export default function EditBlogPage() {
 
     if (!content.trim()) {
       alert('내용을 입력해주세요.');
+      return;
+    }
+
+      if (!isValidUrlPath(urlPath)) {
+      toast.error('URL에는 영문자, 숫자, - (하이픈), _ (밑줄), . (점)만 사용할 수 있습니다.')
+      return;
+    }
+
+    const same = await isUrlSame();
+    if (same) {
+      toast.error('이미 사용된 하위 URL 경로입니다.')
       return;
     }
 
@@ -106,7 +153,8 @@ export default function EditBlogPage() {
       updateBlogPost(postId, {
         title: title.trim(),
         content: content,
-        thumbnail: thumbnail
+        thumbnail: thumbnail,
+        urlPath: urlPath
       });
       setIsSaving(false);
       router.push('/blog');
@@ -182,7 +230,7 @@ export default function EditBlogPage() {
           <h1 className="text-2xl font-bold text-gray-900">글 수정</h1>
           <Button
             onClick={handleSave}
-            disabled={isSaving || !title.trim() || !content.trim()}
+            disabled={isSaving || !title.trim() || !content.trim() || !urlPath.trim()}
             className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-4 py-2 flex items-center space-x-2"
           >
             {isSaving ? (
@@ -209,7 +257,9 @@ export default function EditBlogPage() {
             className="text-lg font-semibold border-0 p-0 focus:ring-0 placeholder:text-gray-400"
           />
         </div>
-
+<SearchUrl 
+            searchQuery={urlPath}
+            onChange={seturlPath}/>
         {/* Content Editor */}
         <div className="bg-white rounded-lg border border-gray-200">
           <RichTextEditor

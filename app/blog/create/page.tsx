@@ -64,7 +64,7 @@ export default function CreateBlogPage() {
     if (cache && cache['result']) {
       const filteredNonNull = (cache['result'] ?? []).filter((item: string) => item !== null);
       const filteredResults = filteredNonNull.filter((item: string) =>
-        item.includes(urlPath)
+        item === urlPath 
       );
       return filteredResults.length > 0;
 
@@ -73,7 +73,7 @@ export default function CreateBlogPage() {
       if (result) {
         const filteredNonNull = (result ?? []).filter((item: string) => item !== null);
         const filteredResults = filteredNonNull.filter((item: string) =>
-          item.includes(urlPath)
+          item === urlPath 
         );
         cache['result'] = result;
         window.sessionStorage.setItem('url_path_search', JSON.stringify(cache));

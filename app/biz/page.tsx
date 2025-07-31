@@ -44,13 +44,13 @@ export default function BizSearchPage() {
       setSearchQuery(search);
 
       if (cache[search]) {
-        console.log("검색페이지, 캐시 사용");
+        
         setSearchResults(cache[search]);
         setShowResults(true);
         setNoResults(cache[search].length === 0); //배열의 요소가 없으면 (=길이가 0이면) true
         setIsSearching(false);
       } else {
-        console.log("검색페이지, API 호출");
+        
         setTimeout(async () => {
           setIsSearching(true);
           const results = await searchCompanies(search); //검색어에 해당하는 사업자 배열 반환받음
@@ -74,7 +74,7 @@ export default function BizSearchPage() {
   }, [search]);
 
   useEffect(() => {
-  console.log('첫 번째');
+  
 }, [searchQuery]);
 
 
@@ -113,13 +113,7 @@ export default function BizSearchPage() {
   };
 
   const handleGoHome = () => {
-    /*
-    setSearchQuery('');
-    setSearchResults([]);
-      setShowResults(false);
-      setNoResults(false); 
-      setIsSearching(false);
-*/
+  
     router.push('/biz')
   };
 

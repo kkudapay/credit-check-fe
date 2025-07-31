@@ -21,16 +21,20 @@ export interface CompanySearchResult {
 
 export interface BusinessData {
   businessNumber: string;
+  representName?: string; //사업자명
   taxpayerStatus?: string;
   taxType?: string;
   corporateNumber?: string;
   businessType?: string;
   companyName?: string;
   address?: string;
+  ftcNum?: string; //통신판매번호
+  homePg?: string; //홈페이지
   closureDate?: string;
 }
 
 export interface OverdueData {
+  isOverdueData: boolean;
   overdueInfo: {
     hasOverdue: boolean;
     totalAmount: number;
@@ -39,6 +43,12 @@ export interface OverdueData {
     lastOverdueDate: number;
   };
   lastUpdated: string;
+}
+
+interface Seg850Item {
+  profCd: string;
+  segId: string;
+  profRsltVal: string;
 }
 
 
@@ -73,12 +83,15 @@ export async function searchCompanies(input: string) {
 
     const mappedResults: BusinessData[] = rawCompanies.map((item: any) => ({
       businessNumber: item.bno ?? "",
+      representName: item.representName ?? "",
       taxpayerStatus: item.b_stt ?? "",
       taxType: item.tax_type ?? "",
       corporateNumber: item.cno ?? "",
       businessType: item.companyTpye ?? "", // 오타 주의
       companyName: item.name ?? "",
       address: item.address ?? "",
+      ftcNum: item.ftcNum ?? "",
+      homePg: item.homePage ?? "",
       closureDate: item.EndDt ?? ""
     }));
 
@@ -103,6 +116,8 @@ export async function getTotalData(bizNumber: string): Promise<(BusinessData & O
     getBusinessData(bizNumber),
     getOverdueData(bizNumber),
   ]);
+
+  
 
   if (!businessData || !overdueData) {
     throw new Error(`사업자 정보 및 연체 정보를 찾을 수 없습니다. ${bizNumber}`);
@@ -131,7 +146,7 @@ export async function getBusinessData(bizNumber: string): Promise<BusinessData |
 
     if (!response.ok) {
       console.error("API 요청 실패:", response.status);
-      return null;
+      return null;  
     }
 
     const json = await response.json();
@@ -141,13 +156,17 @@ export async function getBusinessData(bizNumber: string): Promise<BusinessData |
 
 
     const mappedData: BusinessData = {
+
       businessNumber: company.bno ?? "",
+      representName: company.representName ?? "",
       taxpayerStatus: company.b_stt ?? "",
       taxType: company.tax_type ?? "",
       corporateNumber: company.cno ?? "",
       businessType: company.companyTpye ?? "", // 오타 주의
       companyName: company.name ?? "",
       address: company.address ?? "",
+      ftcNum: company.ftcNum ?? "",
+      homePg: company.homePage ?? "",
       closureDate: company.EndDt ?? ""
     };
 
@@ -175,19 +194,47 @@ export async function getOverdueData(bizNumber: string): Promise<OverdueData | n
     })
 
     const json = await res.json()
+console.log('전체 json: ', json)
+    //const seg850 = undefined;
+    const seg850 = json?.data?.seg850RspLst as Seg850Item[] | undefined;
 
-    const seg850 = json?.data?.seg850RspLst;
-    if (!seg850 ) return null;
-    
+    if (!seg850) {
+      const mappedData: OverdueData = {
+      isOverdueData: false,
+      overdueInfo: {
+      hasOverdue: false,
+      totalAmount: 0,
+      overdueCount: 0,
+      lastOverdueDate: 0,
+      firstOverdueDate: 0, // 오타 주의
+      }, lastUpdated: '',
+    };
+    console.log("null kcb반환: ", mappedData);
+
+    return mappedData;
+      
+    }
+    /*
 
     const hasOverdue = Number(seg850[0].profRsltVal);
     const totalAmount = Number(seg850[0].profRsltVal);
     const overdueCount = Number(seg850[1].profRsltVal);
     const lastOverdueDate = Number(seg850[2].profRsltVal);
     const firstOverdueDate = Number(seg850[3].profRsltVal);
-    
+    */
+
+
+   const getVal = (code: string) =>
+       Number(seg850.find((item: Seg850Item) => item.profCd === code)?.profRsltVal ?? null);
+
+const hasOverdue       = getVal('D2C000065');
+const totalAmount      = getVal('D2C000065');
+const overdueCount     = getVal('D2C000059');
+const lastOverdueDate  = getVal('D2C000067');
+const firstOverdueDate = getVal('D2C000066');
 
     const mappedData: OverdueData = {
+      isOverdueData: true,
       overdueInfo: {
       hasOverdue: hasOverdue == 0 ? false : true,
       totalAmount: totalAmount ?? "",
@@ -196,6 +243,7 @@ export async function getOverdueData(bizNumber: string): Promise<OverdueData | n
       firstOverdueDate: firstOverdueDate ?? "", // 오타 주의
       }, lastUpdated: new Date().toISOString(),
     };
+    console.log("kcd 응답: ", mappedData);
 
     return mappedData;
   } catch (error) {

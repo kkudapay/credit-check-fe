@@ -17,6 +17,9 @@ import TagManager from "react-gtm-module";
 import KkudaHeader from "@/components/ui/KkudaHeader";
 import KkudaFooter from '@/components/ui/KkudaFooter';
 
+import React from 'react';
+
+
 type BusinessInfo = {
   businessNumber: string;
   taxpayerStatus?: string;
@@ -40,6 +43,7 @@ export default function CompanyDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showGraph, setShowGraph] = useState(false); // 🔹 그래프 토글 상태
+  const [isOverdueData, setIsOverdueData] = useState(true);
 
   const businessNumber = params.businessNumber as string;
 
@@ -66,9 +70,14 @@ export default function CompanyDetailPage() {
           const fetchData = async () => {
             try {
               const overdue_data = await getOverdueData(businessNumber);
+              console.log('aaaaaaaa',overdue_data?.isOverdueData)
+              if (overdue_data?.isOverdueData == false){
+                console.log('있을 때 false 넣기')
+                setIsOverdueData(false);
+              }
 
               if (overdue_data) {
-
+                
                 setCompanyData({
                   ...match_biz_data,
                   ...overdue_data,
@@ -99,10 +108,13 @@ export default function CompanyDetailPage() {
           const data = await getTotalData(businessNumber); // 🔧 await 추가
           if (data) {
             setCompanyData(data);
+            console.log('ddddddddddd',data.isOverdueData)
+            if (data.isOverdueData == false) {console.log('없을 때 false 넣기'); setIsOverdueData(false);}
 
           } else {
             setNotFound(true);
           }
+          
         } catch (error) {
           console.error("getTotalData 오류:", error);
           setNotFound(true);
@@ -208,8 +220,7 @@ export default function CompanyDetailPage() {
 
 
 
-
-            <div className="relative ">
+{isOverdueData ? <><div className="relative ">
               <div className="relative border-gray-100 select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   {/*연체 유무*/}
@@ -274,7 +285,62 @@ export default function CompanyDetailPage() {
 
 
               
+            </div></> : <><div className="relative ">
+              <div className="relative border-gray-100 blur-sm select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  {/*연체 유무*/}
+                  <span className="text-gray-700">연체 유무</span>
+                  
+                </div>
+                {/*상세 연체 정보*/}
+
+                <div className="space-y-3 pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">연체 금액</span>
+                    <span className="font-semibold text-red-600">
+                      -
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">연체 건수</span>
+                    <span className="font-semibold">
+                      -
+                    </span>
+                  </div>
+
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">마지막 연체건 경과일</span>
+                    <span className="font-semibold">
+                      -
+                    </span>
+                  </div>
+
+
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-700">처음 연체건 경과일</span>
+                    <span className="font-semibold">
+                      -
+                    </span>
+                  </div>
+
+
+
+                </div>
+
+
+              </div>
+
+
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <h2 className="text-lg font-semibold text-red-600 text-center">해당 사업자는 연체정보를 조회할 수 없습니다.
+                </h2>
+              </div>
             </div>
+          </>}
+            
           </div>
 
           {/* 사업자 정보 */}
@@ -289,18 +355,23 @@ export default function CompanyDetailPage() {
               </div>
 
               <div className="flex items-center justify-between">
+                <span className="text-gray-700">대표자명</span>
+                <span className="font-medium max-w-[50%] text-right" > { companyData.representName ? `${companyData.representName}` : '-'}</span>
+              </div>
+
+              <div className="flex items-center justify-between">
                 <span className="text-gray-700">납세자상태</span>
-                <span className="font-medium max-w-[50%] text-right" >{companyData.taxpayerStatus}</span>
+                <span className="font-medium max-w-[50%] text-right" > { companyData.taxpayerStatus ? `${companyData.taxpayerStatus}` : '-'}</span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">과세유형</span>
-                <span className="font-medium max-w-[50%] text-right">{companyData.taxType || '일반과세자'}</span>
+                <span className="font-medium max-w-[50%] text-right"> { companyData.taxType ? `${companyData.taxType}` : '-'}</span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">사업유형</span>
-                <span className="font-medium max-w-[50%] text-right">{companyData.businessType}</span>
+                <span className="font-medium max-w-[50%] text-right"> { companyData.businessType  ? `${companyData.businessType}` : '-'}</span>
               </div>
 
 
@@ -313,14 +384,30 @@ export default function CompanyDetailPage() {
                 </span>
               </div>
 
+            
+
 
               <div className="flex items-start justify-between">
                 <span className="text-gray-700">주소</span>
                 <span className="font-medium max-w-[50%] text-right">
                   {companyData.address
                     ? `${companyData.address}`
-                    : '-'}
+                    : '-'} 
                 </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700">통신판매번호</span>
+                <span className="font-medium max-w-[50%] text-right" > { companyData.ftcNum ? `${companyData.ftcNum}` : '-'} </span>
+              </div>
+
+              <div className="flex items-start justify-between">
+                <span className="text-gray-700">홈페이지</span>
+                <span className="font-medium max-w-[50%] text-right" >{companyData.homePg 
+      ? companyData.homePg.split(" ").map((url, idx) => (
+  <span key={idx} className="block">{url}</span>
+))
+      : '-'}</span>
               </div>
 
 

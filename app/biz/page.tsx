@@ -113,13 +113,7 @@ export default function BizSearchPage() {
   };
 
   const handleGoHome = () => {
-    /*
-    setSearchQuery('');
-    setSearchResults([]);
-      setShowResults(false);
-      setNoResults(false); 
-      setIsSearching(false);
-*/
+  
     router.push('/biz')
   };
 

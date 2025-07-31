@@ -70,9 +70,9 @@ export default function CompanyDetailPage() {
           const fetchData = async () => {
             try {
               const overdue_data = await getOverdueData(businessNumber);
-              console.log('aaaaaaaa',overdue_data?.isOverdueData)
+              
               if (overdue_data?.isOverdueData == false){
-                console.log('있을 때 false 넣기')
+                
                 setIsOverdueData(false);
               }
 
@@ -82,7 +82,7 @@ export default function CompanyDetailPage() {
                   ...match_biz_data,
                   ...overdue_data,
                 });
-                console.log("상세페이지 SessionStorage 사용");
+                
               } else {
                 setNotFound(true);
               }
@@ -96,20 +96,18 @@ export default function CompanyDetailPage() {
 
           fetchData();
           return () => clearTimeout(timer);
-        } else {
-          console.log("일치하는 값 없음");
-        }
+        } 
       }
 
       //sessionStorage에 사업자 정보 없을 경우
       const fetchData = async () => {
         try {
-          console.log("상세페이지 api 호출");
+          
           const data = await getTotalData(businessNumber); // 🔧 await 추가
           if (data) {
             setCompanyData(data);
-            console.log('ddddddddddd',data.isOverdueData)
-            if (data.isOverdueData == false) {console.log('없을 때 false 넣기'); setIsOverdueData(false);}
+            
+            if (data.isOverdueData == false) {setIsOverdueData(false);}
 
           } else {
             setNotFound(true);

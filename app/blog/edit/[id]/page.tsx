@@ -138,10 +138,9 @@ const isValidUrlPath = (value: string) => {
     setIsSaving(true);
 
     const finalURLS = extractImageUrlsFromContent(content);
-        console.log(finalURLS);
-        console.log(initialURLS);
+        
       const unusedImages = initialURLS.filter(url => !finalURLS.includes(url));
-     console.log(unusedImages);
+     
       for (const url of unusedImages) {
         deleteImageFromSupabase(url);
       }

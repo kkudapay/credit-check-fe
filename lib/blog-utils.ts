@@ -36,7 +36,7 @@ function extractFilePathFromUrl(publicUrl: string): string {
   if (index === -1) {
     throw new Error('유효하지 않은 Supabase public URL');
   }
-  console.log('index + marker.length: ', publicUrl.substring(index + marker.length));
+  
 
   // 'images/...' 경로 추출
   return publicUrl.substring(index + marker.length);
@@ -44,15 +44,12 @@ function extractFilePathFromUrl(publicUrl: string): string {
 
 //DB에 이미지 삭제
 export async function deleteImageFromSupabase(url: string): Promise<void> {
-  console.log('안쓴 이미지 삭제, url: ', url);
+  
   const filePath = extractFilePathFromUrl(url);
-  console.log('filePath: ', filePath);
-  /*
-  const { data, error } = await supabase.storage.from('images').list('blog-images');
-console.log(data);
-*/
+  
+  
   const { data, error } = await supabase.storage.from('images').remove([filePath]);
-  console.log('삭제 요청 후 data: ', data);
+  
   
   if (error) {
     console.error('삭제 오류:', error.message);
@@ -113,7 +110,7 @@ export async function checkAdminOrThrow() {
   const role = session.user.app_metadata?.role;
 
   if (role !== 'admin') throw new Error("관리자 권한이 없습니다.");
-  console.log(session.user.app_metadata)
+  
   return session.user.id;
 
 }

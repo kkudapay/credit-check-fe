@@ -194,7 +194,7 @@ export async function getOverdueData(bizNumber: string): Promise<OverdueData | n
     })
 
     const json = await res.json()
-console.log('전체 json: ', json)
+
     //const seg850 = undefined;
     const seg850 = json?.data?.seg850RspLst as Seg850Item[] | undefined;
 
@@ -209,7 +209,7 @@ console.log('전체 json: ', json)
       firstOverdueDate: 0, // 오타 주의
       }, lastUpdated: '',
     };
-    console.log("null kcb반환: ", mappedData);
+    
 
     return mappedData;
       
@@ -243,7 +243,7 @@ const firstOverdueDate = getVal('D2C000066');
       firstOverdueDate: firstOverdueDate ?? "", // 오타 주의
       }, lastUpdated: new Date().toISOString(),
     };
-    console.log("kcd 응답: ", mappedData);
+    
 
     return mappedData;
   } catch (error) {

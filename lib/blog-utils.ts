@@ -116,22 +116,38 @@ export async function checkAdminOrThrow() {
 }
 
 
+function extractFirstSentence(html: string) {
+  // 1. 태그 제거
+  const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+  // 2. 첫 문장 찾기 (마침표, 물음표, 느낌표 중 하나를 기준)
+  const match = text.match(/.*?[.?!]/);
+
+  if (match) return match[0].trim();
+
+  // 만약 구두점이 없으면 null 반환
+  return null;
+}
+
+
+
 // 블로그 포스트 생성
 export async function createBlogPost({ title, content, thumbnail, urlPath }: { title: string; content: string; thumbnail:string; urlPath:string }) {
  
   const userId = await checkAdminOrThrow();
+  const firstSentence = extractFirstSentence(content);
 
   if (thumbnail!= null){
     const { data, error: insertError } = await supabase
     .from('blog_posts')
-    .insert([{ title, content, userId, thumbnail, urlPath }]);
+    .insert([{ title, content, userId, thumbnail, urlPath, firstSentence }]);
 
   if (insertError) throw insertError;
   return data;
   } else{
     const { data, error: insertError } = await supabase
     .from('blog_posts')
-    .insert([{ title, content, userId, urlPath }]);
+    .insert([{ title, content, userId, urlPath, firstSentence }]);
 
   if (insertError) throw insertError;
   return data;
@@ -144,7 +160,7 @@ export async function createBlogPost({ title, content, thumbnail, urlPath }: { t
 export async function updateBlogPost(id: number, { title, content, thumbnail, urlPath }: { title: string; content: string; thumbnail:string; urlPath:string  }) {
 
   await checkAdminOrThrow();
-
+  const firstSentence = extractFirstSentence(content);
   const { data, error: updateError } = await supabase
     .from('blog_posts')
     .update({
@@ -153,6 +169,7 @@ export async function updateBlogPost(id: number, { title, content, thumbnail, ur
       thumbnail,
       updatedAt: new Date().toISOString(),
       urlPath,
+      firstSentence
     })
     .eq('id', id);
 

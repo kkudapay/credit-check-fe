@@ -421,11 +421,10 @@ export default function CompanyDetailPage() {
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">폐업일</span>
-                <span className="font-medium max-w-[50%] text-right">
-                  {companyData.closureDate
-                    ? `${format_date(companyData.closureDate)}`
-                    : '-'}
-                </span>
+                {companyData.closureDate
+                    ? <span className="font-medium max-w-[50%] text-right text-red-600">{format_date(companyData.closureDate)}</span>
+                    : <span className="font-medium max-w-[50%] text-right">-</span>}
+                
               </div>
 
             </div>

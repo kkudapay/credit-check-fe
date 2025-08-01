@@ -23,12 +23,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   //동적 메타데이터 반환
   return {
-    title: `${companyName} 사업자번호 연체내역 - 꾸다 외상체크`,
-    description: `${companyName} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
+    title: `${companyName} 조회 결과 - 꾸다 외상체크`,
+    description: `${companyName} 사업자등록번호 조회. 연체 중인지 바로 확인하세요. 미수금 걱정을 줄이는 필수 확인 정보.`,
     openGraph: {
-      title: `${companyName} 사업자번호 연체내역 - 꾸다 외상체크`,
-      description: `${companyName} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
+      title: `[꾸다 외상체크] ${companyName} 사업자등록번호 조회`,
+      description: '연체 중인지 바로 확인하세요.',
       url: `https://credit.kkuda.kr/biz/${businessNumber}`,
+      images: [
+    {
+      url: 'https://credit.kkuda.kr/image/og_image_2.png',
+      width: 1200, 
+      height: 630, 
+      alt: '꾸다 외상체크 썸네일',
+    },
+  ],
     },
     alternates: {
       canonical: `https://credit.kkuda.kr/biz/${businessNumber}`,

@@ -7,6 +7,10 @@ interface Props {
   params: { urlPath: string };
 }
 
+interface getBlogResponse {
+  params: { title:string, firstSentence:string };
+}
+
 
 
 
@@ -15,18 +19,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const urlPath = params.urlPath;
 const safeUrlPath = Array.isArray(urlPath) ? urlPath[0] : urlPath;
-  const title = await getBlogTitle(safeUrlPath);
+  const getBlogResponse = await getBlogTitle(safeUrlPath);
 
   
-  if (title) {
+
+  
+  if (getBlogResponse) {
    
       return {
-    title: `${title} - 꾸다 외상체크 블로그`,
-    description: `${title} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
+    title: `${getBlogResponse.title} - 꾸다 외상체크`,
+    description: `${getBlogResponse.firstSentence ? `${getBlogResponse.firstSentence} ` : ''}`,
     openGraph: {
-      title: `${title} - 꾸다 외상체크 블로그`,
-      description: `${title} 사업자등록번호 조회. 연체내역과 신용위험도를 실시간으로 확인하세요. 안전한 거래를 위한 필수 확인 정보.`,
+      title: `[꾸다 외상체크] ${getBlogResponse.title}`,
       url: `https://credit.kkuda.kr/blog/${safeUrlPath}`,
+      images: [
+    {
+      url: 'https://credit.kkuda.kr/image/og_image_1.png', 
+      width: 1200, 
+      height: 630, 
+      alt: '꾸다 외상체크 썸네일',
+    },
+  ],
     },
     alternates: {
       canonical: `https://credit.kkuda.kr/blog/${safeUrlPath}`,

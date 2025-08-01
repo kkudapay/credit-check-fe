@@ -18,7 +18,10 @@ export async function generateMetadata({ searchParams }: { searchParams: { searc
     title,
     description,
     openGraph: {
-      title: `[꾸다 외상체크] ${query ? `${query} 모르고 거래 하면 큰일!` : '[꾸다 외상체크] 사업자 연체내역을 실시간으로 조회하세요'}`,
+      title: query
+  ? `[꾸다 외상체크] ${query} 모르고 거래 하면 큰일!`
+  : '[꾸다 외상체크] 사업자 연체내역을 실시간으로 조회하세요',
+
       description: `${query ? `사업자 대출·카드 연체내역을 실시간으로 조회하세요.` : `미수금 걱정을 줄이는 필수 확인 정보.`}`,
       url: fullUrl,
       siteName: '꾸다 외상체크',

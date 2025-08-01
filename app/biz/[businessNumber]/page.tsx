@@ -242,7 +242,7 @@ export default function CompanyDetailPage() {
                     
                       {companyData.overdueInfo.hasOverdue
                         ? <span className="font-semibold text-red-600">{formatCurrency(companyData.overdueInfo.totalAmount)} 이상</span>
-                        : <span className="font-semibold">-</span>}
+                        : <span className="font-semibold">0원</span>}
                     
                   </div>
 
@@ -251,7 +251,7 @@ export default function CompanyDetailPage() {
                     <span className="font-semibold">
                       {companyData.overdueInfo.hasOverdue
                         ? `${formatNumber(companyData.overdueInfo.overdueCount)}건`
-                        : '-'}
+                        : '0건'}
                     </span>
                   </div>
 
@@ -262,7 +262,7 @@ export default function CompanyDetailPage() {
                       {companyData.overdueInfo.hasOverdue &&
                         companyData.overdueInfo.lastOverdueDate
                         ? `${formatNumber(companyData.overdueInfo.lastOverdueDate)}일`
-                        : '-'}
+                        : '0일'}
                     </span>
                   </div>
 
@@ -274,7 +274,7 @@ export default function CompanyDetailPage() {
                       {companyData.overdueInfo.hasOverdue &&
                         companyData.overdueInfo.firstOverdueDate
                         ? `${formatNumber(companyData.overdueInfo.firstOverdueDate)}일`
-                        : '-'}
+                        : '0일'}
                     </span>
                   </div>
 
@@ -288,10 +288,13 @@ export default function CompanyDetailPage() {
 
               
             </div></> : <><div className="relative ">
-              <div className="relative border-gray-100 blur-sm select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
+              <div className="relative border-gray-100 select-none pointer-events-none bg-white rounded-lg p-4 border border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   {/*연체 유무*/}
                   <span className="text-gray-700">연체 유무</span>
+                  <span className={"px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-400"}>
+                    정보 없음
+                  </span>
                   
                 </div>
                 {/*상세 연체 정보*/}
@@ -336,10 +339,7 @@ export default function CompanyDetailPage() {
               </div>
 
 
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <h2 className="text-lg font-semibold text-red-600 text-center">해당 사업자는 연체정보를 조회할 수 없습니다.
-                </h2>
-              </div>
+              
             </div>
           </>}
             

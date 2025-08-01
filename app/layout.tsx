@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import { sharedMetadata } from './shared-metadata';
 import GTMInitializer from '@/components/ui/GTMInitializer';
 import { Toaster } from 'sonner'; // sonner 알람 사용을 위해
-import paviconImage from '@/public/image/credit_kkuda_favicon.svg';
+import paviconImage from '@/public/image/credit_kkuda_favicon.png';
 import localFont from 'next/font/local';
 
 /*

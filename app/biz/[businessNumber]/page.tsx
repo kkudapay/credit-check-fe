@@ -137,6 +137,10 @@ export default function CompanyDetailPage() {
     TagManager.dataLayer(tagManagerArgs);
   };
 
+  const formatNumber = (num: number) => {
+        return num.toLocaleString();
+    };
+
   //URL /biz로 이동하는 함수 (뒤로가기)
   const handleBack = () => {
     router.push('/biz');
@@ -152,7 +156,7 @@ export default function CompanyDetailPage() {
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">정보를 불러오는 중...</p>
+            <p className="text-gray-600">모르고 거래하면 큰일!<br/>연체 정보를 미리 조회하는 습관을 시작하세요.</p>
           </div>
         </div>
       </div>
@@ -197,7 +201,7 @@ export default function CompanyDetailPage() {
         {/* Company Name */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {companyData.companyName}
+            {companyData.companyName ? companyData.companyName : '-'}
           </h1>
         </div>
 
@@ -235,18 +239,18 @@ export default function CompanyDetailPage() {
                 <div className="space-y-3 pt-3 border-t border-gray-100">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">연체 금액</span>
-                    <span className="font-semibold text-red-600">
+                    
                       {companyData.overdueInfo.hasOverdue
-                        ? `${formatCurrency(companyData.overdueInfo.totalAmount)} 이상`
-                        : '-'}
-                    </span>
+                        ? <span className="font-semibold text-red-600">{formatCurrency(companyData.overdueInfo.totalAmount)} 이상</span>
+                        : <span className="font-semibold">-</span>}
+                    
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">연체 건수</span>
                     <span className="font-semibold">
                       {companyData.overdueInfo.hasOverdue
-                        ? `${companyData.overdueInfo.overdueCount}건`
+                        ? `${formatNumber(companyData.overdueInfo.overdueCount)}건`
                         : '-'}
                     </span>
                   </div>
@@ -257,7 +261,7 @@ export default function CompanyDetailPage() {
                     <span className="font-semibold">
                       {companyData.overdueInfo.hasOverdue &&
                         companyData.overdueInfo.lastOverdueDate
-                        ? `${companyData.overdueInfo.lastOverdueDate}일`
+                        ? `${formatNumber(companyData.overdueInfo.lastOverdueDate)}일`
                         : '-'}
                     </span>
                   </div>
@@ -269,7 +273,7 @@ export default function CompanyDetailPage() {
                     <span className="font-semibold">
                       {companyData.overdueInfo.hasOverdue &&
                         companyData.overdueInfo.firstOverdueDate
-                        ? `${companyData.overdueInfo.firstOverdueDate}일`
+                        ? `${formatNumber(companyData.overdueInfo.firstOverdueDate)}일`
                         : '-'}
                     </span>
                   </div>
@@ -295,7 +299,7 @@ export default function CompanyDetailPage() {
                 <div className="space-y-3 pt-3 border-t border-gray-100">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700">연체 금액</span>
-                    <span className="font-semibold text-red-600">
+                    <span className="font-semibold ">
                       -
                     </span>
                   </div>
@@ -358,9 +362,15 @@ export default function CompanyDetailPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-gray-700">납세자상태</span>
-                <span className="font-medium max-w-[50%] text-right" > { companyData.taxpayerStatus ? `${companyData.taxpayerStatus}` : '-'}</span>
-              </div>
+  <span className="text-gray-700">납세자상태</span>
+  <span
+    className={`font-medium max-w-[50%] text-right ${
+      companyData.taxpayerStatus === '폐업자' ? 'text-red-600' : ''
+    }`}
+  >
+    {companyData.taxpayerStatus ? companyData.taxpayerStatus : '-'}
+  </span>
+</div>
 
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">과세유형</span>

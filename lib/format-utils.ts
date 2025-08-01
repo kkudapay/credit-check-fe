@@ -4,7 +4,7 @@ export function formatCurrency(value: number): string {
   
   if (value === 0) return "0원"
 
-  const units = ["천", "만", "0만", "00만", "000만", "억", "0억", "00억", "000억", "조"]
+  const units = ["천", "만", "0만", "00만", ",000만", "억", "0억", "00억", ",000억", "조"]
   const str = value.toString()
   const len = str.length
   

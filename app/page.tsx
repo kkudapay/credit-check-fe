@@ -16,7 +16,8 @@ export default function HomePage() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-        <p className="text-gray-600">페이지를 불러오는 중...</p>
+        <p className="text-gray-600">안전한 거래의 시작,<br/>
+꾸다 외상체크의 시작을 환영합니다!</p>
       </div>
     </div>
   );

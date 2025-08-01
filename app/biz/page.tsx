@@ -10,7 +10,7 @@ import { formatBusinessNumber, searchCompanies, type BusinessData } from '@/lib/
 import HamburgerWithSidebar from '@/components/ui/HamburgerWithSidebar'
 import TagManager from "react-gtm-module";
 import KkudaFooter from '@/components/ui/KkudaFooter';
-
+import customerServiceQR from '@/public/image/customerServiceQR.png';
 
 export default function BizSearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -185,19 +185,30 @@ export default function BizSearchPage() {
                 {isSearching ? (
                   <div className="flex items-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>검색중...</span>
+                    <span>조회 중...</span>
                   </div>
                 ) : (
-                  '검색'
+                  '조회'
                 )}
               </Button>
             </div>
 
 
             {!isSearching && noResults && (
-              <div className="text-center text-2xl text-gray-600 py-8 font-semibold">
-                국세청에 등록되지 않은 사업자입니다
+              <>
+              <div className="text-center text-2xl pt-5 pb-3 font-semibold ">
+                앗, 조회 결과가 없어요.
               </div>
+              <h3 className=" text-center">원하시는 정보가 없으신가요?</h3>
+              <a href="http://pf.kakao.com/_xjlLkT/chat?utm_source=onsite_search&utm_medium=internal&utm_campaign=no_result&utm_content=cs" target='_blank'>
+              <p className=" text-center text-medium underline ">고객센터 바로가기</p></a>
+              <div className='flex justify-center items-center h-full pt-2'>
+              <img
+                                            src={customerServiceQR.src}
+                                            alt='고객센터 QR'
+                                            className="w-24 h-24 "
+                                        /></div>
+              </>
             )}
 
             {!isSearching && searchResults.length > 0 && (
@@ -209,7 +220,7 @@ export default function BizSearchPage() {
                     className="bg-white rounded-lg shadow-lg p-4 border  cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                   >
                     <div className="space-y-2">
-                      <h3 className="font-medium text-gray-900">{company.companyName}</h3>
+                      <h3 className="font-medium text-gray-900">{company.companyName ? company.companyName:'-'}</h3>
                       <p className="text-sm text-gray-600">{formatBusinessNumber(company.businessNumber)}</p>
                       {company.address && (
                         <p className="text-sm text-gray-500">{company.address}</p>
